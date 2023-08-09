@@ -103,7 +103,7 @@ export default (a, c) => {
     } else {
       console.log(`${a.username}: Error: ${error.code}`);
       a.bot.quit();
-      await wait(c.random(5000, 10000));
+      await c.wait(c.random(5000, 10000));
       a.startBot();
     }
   });
