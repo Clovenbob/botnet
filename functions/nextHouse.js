@@ -2,8 +2,8 @@ export default (a, c) => {
   a.nextHouse = async () => {
     clearTimeout(a.houseTimeout);
     if (a.subTask !== "match") return;
-    a.houses += 1;
     await a.bot.waitForTicks(c.random(20, 60));
+    a.houses += 1;
     a.sendMessage(`/home ${a.houses > 99 ? "" : "0"}${a.houses > 9 ? "" : "0"}${a.houses}`);
     a.houseTimeout = setTimeout(() => {
       if (a.subTask !== "match") return;

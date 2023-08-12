@@ -1,14 +1,16 @@
 import { random, wait, addServer } from "./extra.js";
 import chalk from "chalk";
 
-export default {
-  //--------------------------
+const config = {
   mainaccount: "Clovenbob",
   chatEnabled: true,
-  //--------------------------
+};
 
-  //Don't edit:
-  main: this.mainaccount.toLowerCase(),
+//don't edit:
+export default {
+  mainaccount: config.mainaccount,
+  chatEnabled: config.chatEnabled,
+  main: config.mainaccount.toLowerCase(),
   targetHouse: "",
   botList: [],
   serverList: [],

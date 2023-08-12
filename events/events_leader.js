@@ -3,13 +3,13 @@ export default (a, c) => {
     a.dc = true;
   });
 
-  a.bot.once("spawn", async () => {
+  a.bot.on("spawn", async () => {
+    if (a.online) return;
     if (a.dc) for (let i = 1; i < c.botList.length; i++) c.botList[i].logout();
     a.dc = false;
     await a.bot.waitForTicks(100);
     a.sendMessage("/p leave");
     a.sendMessage(`/p ${c.main}`);
-    console.log(c.chalk.greenBright(`${a.bot.username}: Spawned in`));
   });
 
   a.bot.on("message", (json) => {
@@ -20,7 +20,7 @@ export default (a, c) => {
 
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
 
-    if (c.chatEnabled) console.log(message);
+    if (c.chatEnabled) console.log(json.toAnsi());
 
     //if (rankless === `${c.main} joined the party.`) a.sendMessage(`/p transfer ${c.main}`); Need leader perms for /p disband
 

@@ -1,12 +1,15 @@
 export default (a, c) => {
   a.bot.on("end", async (reason) => {
+    console.log(c.chalk.red(`${a.bot.username}: ${reason}.\nReconnecting...`));
+    a.bot.removeAllListeners();
     a.online = false;
-    console.log(c.chalk.red(`${a.bot.username}: ${reason}`));
     await c.wait(c.random(5000, 10000));
-    a.startBot();
+    a.restartBot();
   });
 
-  a.bot.once("spawn", async () => {
+  a.bot.on("spawn", async () => {
+    if (a.online) return;
+    console.log(c.chalk.greenBright(`${a.bot.username}: Spawned in`));
     await a.bot.waitForTicks(100);
     a.online = true;
     a.sendMessage("/status busy");
@@ -14,7 +17,6 @@ export default (a, c) => {
     a.sendMessage("/p leave");
     await a.bot.waitForTicks(100);
     c.botList[0].sendInvite(a.bot.username);
-    console.log(c.chalk.greenBright(`${a.bot.username}: Spawned in`));
   });
 
   a.bot.on("spawn", async () => {
@@ -28,7 +30,7 @@ export default (a, c) => {
     const message = json.toString();
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
 
-    if (c.main === a.bot.username.toLowerCase()) {
+    if (c.main === a.bot.username?.toLowerCase()) {
       console.log(c.chalk.red("Main account can not be a bot's username."));
       process.exit();
     }
@@ -98,13 +100,11 @@ export default (a, c) => {
   });
 
   a.bot.on("error", async (error) => {
-    if (error.code === "ECONNREFUSED") {
-      console.log(`${a.bot.username}: Failed to connect to ${error.address}:${error.port}`);
-    } else {
-      console.log(`${a.username}: Error: ${error.code}`);
-      a.bot.quit();
-      await c.wait(c.random(5000, 10000));
-      a.startBot();
-    }
+    console.log(c.chalk.red(`${error} (${a.bot.username ? a.bot.username : a.username})\nReconnecting...`));
+    a.bot?.quit();
+    a.bot?.removeAllListeners();
+    a.online = false;
+    await c.wait(c.random(5000, 10000));
+    a.restartBot();
   });
 };
