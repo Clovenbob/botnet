@@ -1,4 +1,6 @@
-export default (a, c) => {
+import { Bot, Config } from "../types.ts";
+
+export default (a: Bot, c: Config) => {
   a.bot.on("end", () => {
     a.dc = true;
   });
@@ -12,9 +14,9 @@ export default (a, c) => {
     a.sendMessage(`/p ${c.main}`);
   });
 
-  a.bot.on("message", (json) => {
+  a.bot.on("message", (json: any) => {
     if (json["extra"] && json["extra"].length === 100) return;
-    const message = json.toString();
+    const message: string = json.toString();
 
     if (message.startsWith("You are currently ")) return;
 
@@ -22,18 +24,24 @@ export default (a, c) => {
 
     if (c.chatEnabled) console.log(json.toAnsi());
 
-    //if (rankless === `${c.main} joined the party.`) a.sendMessage(`/p transfer ${c.main}`); Need leader perms for /p disband
-
-    if (rankless.startsWith(`party > ${c.main}: `) || rankless.startsWith(`party > ${c.mainaccount.toLowerCase()}: `)) {
-      const command = rankless.replace(`party > ${c.main}: `, "").replace(`party > ${c.mainaccount.toLowerCase()}: `, "");
+    if (
+      rankless.startsWith(`party > ${c.main}: `) ||
+      rankless.startsWith(`party > ${c.mainaccount.toLowerCase()}: `)
+    ) {
+      const command = rankless
+        .replace(`party > ${c.main}: `, "")
+        .replace(`party > ${c.mainaccount.toLowerCase()}: `, "");
       console.log(command);
       for (let i = 0; i < c.botList.length; i++) {
         if (command.startsWith(c.botList[i].bot.username?.toLowerCase())) {
-          return c.botList[i].command(command.replace(`${c.botList[i].bot.username?.toLowerCase()} `, ""));
+          return c.botList[i].command(
+            command.replace(`${c.botList[i].bot.username?.toLowerCase()} `, "")
+          );
         }
       }
 
-      for (let i = 0; i < c.botList.length; i++) c.botList[i].command(command, true);
+      for (let i = 0; i < c.botList.length; i++)
+        c.botList[i].command(command, true);
     }
   });
 };

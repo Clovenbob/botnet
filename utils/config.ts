@@ -1,4 +1,5 @@
-import { random, wait, addServer } from "./extra.js";
+import { random, wait, addServer } from "./extra.ts";
+import { Config } from "../types.ts";
 import chalk from "chalk";
 
 const config = {
@@ -7,7 +8,7 @@ const config = {
 };
 
 //don't edit:
-export default {
+const c: Config = {
   mainaccount: config.mainaccount,
   chatEnabled: config.chatEnabled,
   main: config.mainaccount.toLowerCase(),
@@ -20,3 +21,5 @@ export default {
   random: random,
   wait: wait,
 };
+
+export default c;

@@ -1,5 +1,5 @@
 import readline from "readline";
-import c from "./config.js";
+import c from "./config.ts";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -7,14 +7,16 @@ const rl = readline.createInterface({
 });
 
 rl.prompt(true);
-rl.on("line", (input) => {
+rl.on("line", (input: string) => {
   const inputl = input.toLowerCase();
   switch (true) {
     case inputl === "help":
       console.log(
         `\n${c.chalk.blueBright("Commands")}:\n\n ${c.chalk.yellow(
           "togglechat"
-        )}: Turns chat on/off.\n ${c.chalk.yellow("chat (message)")}: Send a message.\n ${c.chalk.yellow(
+        )}: Turns chat on/off.\n ${c.chalk.yellow(
+          "chat (message)"
+        )}: Send a message.\n ${c.chalk.yellow(
           "account (name)"
         )}: Switches the ingame command account.\n ${c.chalk.yellow(
           "logout"
@@ -35,7 +37,11 @@ rl.on("line", (input) => {
 
     case inputl === "togglechat":
       c.chatEnabled = !c.chatEnabled;
-      console.log(`Toggled chat ${c.chatEnabled ? c.chalk.greenBright("on") : c.chalk.redBright("off")}!`);
+      console.log(
+        `Toggled chat ${
+          c.chatEnabled ? c.chalk.greenBright("on") : c.chalk.redBright("off")
+        }!`
+      );
       break;
 
     case inputl === "logout":
@@ -51,6 +57,10 @@ rl.on("line", (input) => {
       process.exit();
 
     default:
-      console.log(`${c.chalk.redBright("Unknown command.")}\nType help for a list of commands`);
+      console.log(
+        `${c.chalk.redBright(
+          "Unknown command."
+        )}\nType help for a list of commands`
+      );
   }
 });

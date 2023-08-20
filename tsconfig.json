@@ -1,0 +1,15 @@
+{
+  "exclude": ["node_modules"],
+  "include": ["./**/*.ts"],
+
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  }
+}

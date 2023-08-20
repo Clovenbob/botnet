@@ -1,4 +1,6 @@
-export default async (a, c) => {
+import { Bot, Config } from "../../types.ts";
+
+export default async (a: Bot, c: Config) => {
   if (!a.inTask && a.subTask === "match") {
     a.inTask = true;
     a.houses = 0;

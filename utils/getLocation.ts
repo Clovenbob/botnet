@@ -1,6 +1,8 @@
-export default (message) => {
+import { Location } from "../types.ts";
+
+export default (message: string) => {
   const keys = ["lobbyname", "gametype", "server", "map"];
-  const location = { valid: true };
+  const location: Location = { valid: true };
 
   if (message.startsWith("{")) {
     const json = JSON.parse(message);

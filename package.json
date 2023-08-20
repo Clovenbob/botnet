@@ -1,12 +1,16 @@
 {
   "name": "botnet",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "author": "Clovenbob",
   "description": "A botnet for Hypixel.",
+  "scripts": {
+    "start": "ts-node --esm ./index.ts"
+  },
   "dependencies": {
     "chalk": "^5.3.0",
-    "mineflayer": "^4.10.0"
+    "mineflayer": "^4.10.0",
+    "ts-node": "^10.9.1"
   }
 }

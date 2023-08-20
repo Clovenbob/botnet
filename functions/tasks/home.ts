@@ -1,4 +1,6 @@
-export default async (a, c) => {
+import { Bot, Config } from "../../types.ts";
+
+export default async (a: Bot, c: Config) => {
   if (a.mainTask === "home" && a.location["map"] !== "Base") {
     a.inTask = true;
     const space = a.targetHouse.indexOf(" ");

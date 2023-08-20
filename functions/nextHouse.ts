@@ -1,10 +1,14 @@
-export default (a, c) => {
+import { Bot, Config } from "../types.ts";
+
+export default (a: Bot, c: Config) => {
   a.nextHouse = async () => {
     clearTimeout(a.houseTimeout);
     if (a.subTask !== "match") return;
     await a.bot.waitForTicks(c.random(20, 60));
     a.houses += 1;
-    a.sendMessage(`/home ${a.houses > 99 ? "" : "0"}${a.houses > 9 ? "" : "0"}${a.houses}`);
+    a.sendMessage(
+      `/home ${a.houses > 99 ? "" : "0"}${a.houses > 9 ? "" : "0"}${a.houses}`
+    );
     a.houseTimeout = setTimeout(() => {
       if (a.subTask !== "match") return;
       const serverString = Object.entries(c.serversMatched)

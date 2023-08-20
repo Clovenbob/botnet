@@ -1,15 +1,17 @@
-export default (a, c) => {
+import { Bot, Config } from "../types.ts";
+
+export default (a: Bot, c: Config) => {
   a.sendMessage = (message = "") => {
     if (!a.online) return;
 
     const chunkSize = 250; //6 extra
-    const partyMessage = message.startsWith("/pc ");
+    const partyMessage = message?.startsWith("/pc ");
 
     if (message.length <= chunkSize) {
       a.messageQueue.push(message);
     } else {
       for (let i = 0; i < message.length; i += chunkSize) {
-        let chunk = message.substring(i, chunkSize + 1);
+        let chunk = message.substring(i, i + chunkSize + 1);
         if (partyMessage && !chunk.startsWith("/pc ")) chunk = `/pc ${chunk}`;
         a.messageQueue.push(chunk);
       }
@@ -17,7 +19,9 @@ export default (a, c) => {
 
     if (!a.isSending) {
       a.isSending = true;
-      a.intervalId = setInterval(() => a.sendNextMessage(), 500);
+      a.intervalId = setInterval(() => {
+        a.sendNextMessage();
+      }, 500);
     }
   };
 
@@ -26,7 +30,9 @@ export default (a, c) => {
 
     if (a.messageQueue.length > 10) {
       a.messageQueue = [];
-      console.log(c.chalk.red(`${a.bot.username}: Too many messages in queue.`));
+      console.log(
+        c.chalk.red(`${a.bot.username}: Too many messages in queue.`)
+      );
     }
 
     if (a.messageQueue.length > 0) {

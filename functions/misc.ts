@@ -1,4 +1,6 @@
-export default (a, c) => {
+import { Bot, Config } from "../types.ts";
+
+export default (a: Bot, c: Config) => {
   a.logout = async () => {
     if (!a.online) return;
     a.messageQueue.splice(1);
@@ -12,11 +14,11 @@ export default (a, c) => {
     a.sendMessage("/p leave");
   };
 
-  a.promote = (user) => {
+  a.promote = (user: string) => {
     a.sendMessage(`/p promote ${user}`);
   };
 
-  a.sendInvite = (user) => {
+  a.sendInvite = (user: string) => {
     a.sendMessage(`/p ${user}`);
   };
 };

@@ -1,4 +1,6 @@
-export default async (a, c) => {
+import { Bot, Config } from "../../types.ts";
+
+export default async (a: Bot, c: Config) => {
   if (a.mainTask === "limbo" && a.location["server"] !== "limbo") {
     a.inTask = true;
     await a.bot.waitForTicks(c.random(1, 20));
