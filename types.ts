@@ -15,7 +15,7 @@ export interface Bot {
 
   messageQueue: string[];
   isSending: boolean;
-  intervalId: NodeJS.Timeout;
+  intervalId: any;
 
   mainTask: string;
   subTask: string;
@@ -25,7 +25,7 @@ export interface Bot {
   clickItems: boolean;
 
   targetHouse: string;
-  houseTimeout: NodeJS.Timeout;
+  houseTimeout: any;
   houses: number;
   serverFails: number;
 
