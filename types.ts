@@ -15,7 +15,7 @@ export interface Bot {
 
   messageQueue: string[];
   isSending: boolean;
-  intervalId: NodeJS.Timer;
+  intervalId: NodeJS.Timeout;
 
   mainTask: string;
   subTask: string;

@@ -8,13 +8,14 @@ export default (a: Bot, c: Config) => {
         if (!all || a.isLeader) {
           a.sendMessage("/pc Logging all accounts out...");
         }
+        a.bot.removeAllListeners();
         a.logout();
         await c.wait(5000);
         process.exit();
 
       case command === "restart":
         if (!all || a.isLeader) {
-          a.sendMessage("/pc Restarting... (a should take <15s)");
+          a.sendMessage("/pc Restarting... (should take <15s)");
         }
         a.logout();
         break;

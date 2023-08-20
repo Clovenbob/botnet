@@ -3,13 +3,14 @@
   "include": ["./**/*.ts"],
 
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
     "target": "ESNext",
-    "module": "NodeNext",
+    "outDir": "output",
     "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true
+    "noEmit": true
   }
 }

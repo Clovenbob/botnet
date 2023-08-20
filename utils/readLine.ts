@@ -48,6 +48,7 @@ rl.on("line", (input: string) => {
       console.log(c.chalk.redBright("Logging all accounts out... "));
       setTimeout(() => process.exit(), 5000);
       for (let i = 0; i < c.botList.length; i++) {
+        c.botList[i].bot.removeAllListeners();
         c.botList[i].logout();
       }
       break;
