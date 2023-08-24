@@ -3,53 +3,51 @@ import { Bot, Config } from "../types.ts";
 export default (a: Bot, c: Config) => {
   a.command = async (command: string, all = false) => {
     if (!a.online) return;
+
+    const respond = (message: string) => {
+      if (!all || a.isLeader) a.sendMessage(`/pc ${message}`);
+    };
+
     switch (true) {
-      case command === "logout":
-        if (!all || a.isLeader) {
-          a.sendMessage("/pc Logging all accounts out...");
-        }
+      case command.startsWith("logout"):
+        respond(`Logging ${all ? "all accounts" : a.bot.username} out...`);
         a.bot.removeAllListeners();
         a.logout();
-        await c.wait(5000);
-        process.exit();
+
+        if (!command.includes("noexit") && all) {
+          await c.wait(5000);
+          process.exit();
+        }
 
       case command === "restart":
-        if (!all || a.isLeader) {
-          a.sendMessage("/pc Restarting... (should take <15s)");
-        }
+        respond("Restarting... (this should take <15s)");
         a.logout();
         break;
 
       case command === "limbo":
-        if (!all || a.isLeader) {
-          a.sendMessage("/pc Switching task to limbo...");
-        }
+        respond("Switching task to limbo...");
         a.startTask("limbo");
         break;
 
       case command === "reward":
-        if (!all || a.isLeader) {
-          a.sendMessage("/pc Claiming daily reward...");
-        }
+        respond("Claiming daily reward...");
         a.startTask(undefined, "reward");
         break;
 
       case command === "endmatch":
-        if (!all || a.isLeader) {
-          a.sendMessage("/pc Matching ended!");
-        }
-        a.startTask(undefined, "");
-        a.inTask = false;
+        respond("Matching ended.");
         clearTimeout(a.houseTimeout);
+        a.inTask = false;
+        a.startTask(undefined, "");
         break;
 
       case command.startsWith("home "):
         const replacement = command.replace("home ", "");
-        if (!all || a.isLeader) {
-          if (!replacement.includes(" "))
-            a.sendMessage(`/pc Invalid format. (owner housename|number)`);
-          else a.sendMessage(`/pc Switching task to home... (${replacement})`);
-        }
+        respond(
+          replacement.includes(" ")
+            ? `Switching task to home... (${replacement})`
+            : "Invalid format. (owner name|number)"
+        );
         if (!replacement.includes(" ")) return;
         a.targetHouse = replacement;
         a.location["map"] = "";
@@ -63,41 +61,34 @@ export default (a: Bot, c: Config) => {
           .replace("MINI", "mini")
           .split(/, |,| /);
 
-        if (!all || a.isLeader)
-          a.sendMessage(
-            `/pc Matching ${
-              c.serverList.length === 1
-                ? c.serverList[0]
-                : c.serverList.length === 2
-                ? c.serverList.join(" and ")
-                : `${c.serverList.slice(0, -1).join(", ")}, and ${
-                    c.serverList[c.serverList.length - 1]
-                  }`
-            }...`
-          );
+        respond(
+          `Matching ${
+            c.serverList.length === 1
+              ? c.serverList[0]
+              : c.serverList.length === 2
+              ? c.serverList.join(" and ")
+              : `${c.serverList.slice(0, -1).join(", ")}, and ${
+                  c.serverList[c.serverList.length - 1]
+                }`
+          }...`
+        );
         a.startTask(undefined, "match");
         break;
 
       case command.startsWith("chat "):
-        if (c.main !== c.mainaccount.toLowerCase() && (!all || a.isLeader))
-          a.sendMessage(
-            `/pc Sorry, this feature is only available for ${c.mainaccount}.`
+        if (c.main !== c.mainaccount.toLowerCase()) {
+          return respond(
+            `Sorry, this feature is only available for ${c.mainaccount}.`
           );
-        if (c.main !== c.mainaccount.toLowerCase()) return;
+        }
+
         a.sendMessage(command.replace("chat ", ""));
         break;
 
       case command.startsWith("account "):
         c.main = command.replace("account ", "");
-        if (!all || a.isLeader) {
-          a.sendMessage(`/pc Switched main account to ${c.main}!`);
-        }
+        respond(`Switched main account to ${c.main}!`);
         break;
-
-      default:
-        if (!all || a.isLeader) {
-          a.sendMessage("/pc Unknown command.");
-        }
     }
   };
 };
