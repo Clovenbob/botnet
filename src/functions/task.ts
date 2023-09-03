@@ -1,9 +1,9 @@
-import { Bot, Config } from "../types.ts";
-
-import home from "./tasks/home.ts";
-import limbo from "./tasks/limbo.ts";
-import reward from "./tasks/reward.ts";
-import match from "./tasks/match.ts";
+import { Bot, Config } from "../types";
+import home from "./tasks/home.js";
+import limbo from "./tasks/limbo.js";
+import reward from "./tasks/reward.js";
+import match from "./tasks/match.js";
+import skyblock from "./tasks/skyblock.js";
 
 export default (a: Bot, c: Config) => {
   a.startTask = async (mainTask = undefined, subTask = undefined) => {
@@ -16,5 +16,6 @@ export default (a: Bot, c: Config) => {
     if (await match(a, c)) return;
     if (await home(a, c)) return;
     if (await limbo(a, c)) return;
+    if (await skyblock(a, c)) return;
   };
 };

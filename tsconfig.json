@@ -1,16 +1,25 @@
 {
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "testing"],
   "include": ["./**/*.ts"],
 
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "preserveConstEnums": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "module": "ESNext",
+    "outDir": "dist",
+    "rootDir": "src",
     "target": "ESNext",
-    "outDir": "output",
-    "strict": true,
-    "noEmit": true
+    "module": "ESNext",
+    "lib": ["ESNext"],
+    "typeRoots": ["node_modules/@types"],
+    "moduleResolution": "node"
   }
 }

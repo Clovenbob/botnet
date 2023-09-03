@@ -1,4 +1,4 @@
-import { Location } from "../types.ts";
+import { Location } from "../types";
 
 export default (message: string) => {
   const keys = ["lobbyname", "gametype", "server", "map"];

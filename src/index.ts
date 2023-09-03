@@ -1,9 +1,9 @@
-import { Bot, Location } from "./types.ts";
-import getLocation from "./utils/getLocation.ts";
-import startBot from "./utils/startBot.ts";
-import accounts from "./.env/accounts.ts";
+import { Bot, Location } from "./types";
+import getLocation from "./utils/getLocation.js";
+import startBot from "./utils/startBot.js";
+import accounts from "./.env/accounts.js";
 import c from "./utils/config.js";
-import "./utils/readLine.ts";
+import "./utils/readLine.js";
 
 class createBot implements Bot {
   constructor(

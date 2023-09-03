@@ -1,5 +1,5 @@
 import readline from "readline";
-import c from "./config.ts";
+import c from "./config.js";
 
 const rl = readline.createInterface({
   input: process.stdin,

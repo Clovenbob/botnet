@@ -1,4 +1,4 @@
-import { Bot, Config } from "../types.ts";
+import { Bot, Config } from "../types";
 
 export default (a: Bot, c: Config) => {
   a.logout = async () => {

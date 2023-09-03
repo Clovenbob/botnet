@@ -1,4 +1,4 @@
-import { Bot, Config } from "../types.ts";
+import { Bot, Config } from "../types";
 
 export default (a: Bot, c: Config) => {
   a.command = async (command: string, all = false) => {
@@ -28,7 +28,11 @@ export default (a: Bot, c: Config) => {
         respond("Switching task to limbo...");
         a.startTask("limbo");
         break;
-
+      case command === "skyblock":
+        respond("Switching task to skyblock...");
+        a.location["server"] = "limbo";
+        a.startTask("skyblock");
+        break;
       case command === "reward":
         respond("Claiming daily reward...");
         a.startTask(undefined, "reward");

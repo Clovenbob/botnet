@@ -1,4 +1,4 @@
-import { Bot, Config } from "../../types.ts";
+import { Bot, Config } from "../../types";
 
 export default async (a: Bot, c: Config) => {
   if (a.mainTask === "home" && a.location["map"] !== "Base") {

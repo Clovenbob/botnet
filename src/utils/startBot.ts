@@ -1,8 +1,8 @@
 import mineflayer from "mineflayer";
-import botFunctions from "../functions/index.ts";
-import botEvents from "../events/events_all.ts";
-import leaderEvents from "../events/events_leader.ts";
-import { Bot, Config } from "../types.ts";
+import botFunctions from "../functions/index.js";
+import botEvents from "../events/events_all.js";
+import leaderEvents from "../events/events_leader.js";
+import { Bot, Config } from "../types";
 
 export default (a: Bot, c: Config) => {
   a.restartBot = () => {

@@ -1,9 +1,9 @@
-import { Bot, Config } from "../../types.ts";
+import { Bot, Config } from "../../types";
 
 export default async (a: Bot, c: Config) => {
   if (!a.inTask && a.subTask === "reward") {
     a.inTask = true;
-    await a.bot.waitForTicks(1, 20);
+    await a.bot.waitForTicks(c.random(1, 20));
 
     a.sendMessage("/lobby housing");
     await a.bot.waitForTicks(c.random(40, 80));

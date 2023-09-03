@@ -41,7 +41,7 @@ export interface Bot {
   logout: () => void;
   leave: () => void;
 
-  bot: any;
+  bot: mineflayer.Bot;
 }
 
 export interface Config {

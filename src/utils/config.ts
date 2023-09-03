@@ -1,5 +1,5 @@
-import { random, wait, addServer } from "./extra.ts";
-import { Config } from "../types.ts";
+import { random, wait, addServer } from "./extra.js";
+import { Config } from "../types";
 import chalk from "chalk";
 
 const config = {

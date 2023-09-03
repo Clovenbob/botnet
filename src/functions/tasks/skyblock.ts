@@ -1,0 +1,20 @@
+import { Bot, Config } from "../../types";
+
+export default async (a: Bot, c: Config) => {
+  if (a.mainTask === "skyblock" && a.location["server"] === "limbo") {
+    a.inTask = true;
+    await a.bot.waitForTicks(c.random(1, 20));
+    a.sendMessage("/l");
+    await a.bot.waitForTicks(c.random(40, 100));
+    a.sendMessage("/play sb");
+    await a.bot.waitForTicks(120);
+    if (a.location["gametype"] !== "SKYBLOCK") {
+      a.sendMessage(`/pc ✖ Something went wrong trying to join Skyblock.`);
+    } else {
+      a.sendMessage(`/pc ✔ Entered Skyblock.`);
+    }
+    a.inTask = false;
+    a.startTask();
+    return true;
+  } else return false;
+};

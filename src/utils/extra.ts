@@ -1,4 +1,4 @@
-import c from "./config.ts";
+import c from "./config.js";
 
 export const wait = (ms: number) => {
   return new Promise<void>((resolve) => {
