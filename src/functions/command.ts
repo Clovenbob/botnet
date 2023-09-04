@@ -1,11 +1,26 @@
 import { Bot, Config } from "../types";
 
 export default (a: Bot, c: Config) => {
-  a.command = async (command: string, all = false) => {
+  a.command = async (command: string, response: number, all = false) => {
     if (!a.online) return;
 
     const respond = (message: string) => {
-      if (!all || a.isLeader) a.sendMessage(`/pc ${message}`);
+      if (!all || a.isLeader) {
+        switch (response) {
+          case 0:
+            console.log(message);
+            break;
+          case 1:
+            a.sendMessage(`/pc ${message}`);
+            break;
+          case 2:
+            //send discord message (WIP)
+            break;
+          case 3:
+            //send message to server (WIP)
+            break;
+        }
+      }
     };
 
     switch (true) {
@@ -91,7 +106,7 @@ export default (a: Bot, c: Config) => {
         break;
 
       case command.startsWith("chat "):
-        if (c.main !== c.mainaccount.toLowerCase()) {
+        if (c.main !== c.mainaccount.toLowerCase() && response === 1) {
           return respond(
             `Sorry, this feature is only available for ${c.mainaccount}.`
           );

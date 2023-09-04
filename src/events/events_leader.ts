@@ -1,4 +1,5 @@
 import { Bot, Config } from "../types";
+import send from "../utils/sendToBots.js";
 
 export default (a: Bot, c: Config) => {
   a.bot.on("end", () => {
@@ -31,17 +32,7 @@ export default (a: Bot, c: Config) => {
       const command = rankless
         .replace(`party > ${c.main}: `, "")
         .replace(`party > ${c.mainaccount.toLowerCase()}: `, "");
-      console.log(command);
-      for (let i = 0; i < c.botList.length; i++) {
-        if (command.startsWith(c.botList[i].bot.username?.toLowerCase())) {
-          return c.botList[i].command(
-            command.replace(`${c.botList[i].bot.username?.toLowerCase()} `, "")
-          );
-        }
-      }
-
-      for (let i = 0; i < c.botList.length; i++)
-        c.botList[i].command(command, true);
+      send(command, 1);
     }
   });
 };

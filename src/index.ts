@@ -83,7 +83,7 @@ class createBot implements Bot {
   serverFails: number;
 
   startTask: (mainTask?: string, subTask?: string) => void;
-  command: (command: string, all?: boolean) => void;
+  command: (command: string, response: number, all?: boolean) => void;
   sendMessage: (message?: string) => void;
   matched: (iMatched?: boolean) => void;
   sendInvite: (user: string) => void;
