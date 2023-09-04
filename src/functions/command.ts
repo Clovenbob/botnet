@@ -23,7 +23,18 @@ export default (a: Bot, c: Config) => {
         respond("Restarting... (this should take <15s)");
         a.logout();
         break;
-
+      case command === "reparty":
+        if (!a.isLeader) return;
+        respond("Repartying...");
+        a.sendMessage(`/p disband`);
+        a.sendMessage(`/p leave`);
+        a.sendMessage(`/p ${c.main}`);
+        for (const bot of c.botList) {
+          bot.sendMessage("/p leave");
+          bot.sendMessage("/status busy");
+          c.botList[0].sendInvite(bot.bot.username);
+        }
+        break;
       case command === "limbo":
         respond("Switching task to limbo...");
         a.startTask("limbo");

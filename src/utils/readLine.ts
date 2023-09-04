@@ -31,6 +31,11 @@ rl.on("line", (input: string) => {
       console.log(`Switched account to ${c.chalk.yellowBright(c.main)}!`);
       break;
 
+    case inputl.startsWith("chatall "):
+      for (let i = 0; i < c.botList.length; i++) {
+        c.botList[i].sendMessage(input.replace(/chatall /i, ""));
+      }
+      break;
     case inputl.startsWith("chat "):
       c.botList[0].sendMessage(input.replace(/chat /i, ""));
       break;
@@ -42,6 +47,18 @@ rl.on("line", (input: string) => {
           c.chatEnabled ? c.chalk.greenBright("on") : c.chalk.redBright("off")
         }!`
       );
+      break;
+
+    case input === "reparty":
+      console.log(c.chalk.greenBright("Repartying..."));
+      c.botList[0].sendMessage(`/p disband`);
+      c.botList[0].sendMessage(`/p leave`);
+      c.botList[0].sendMessage(`/p ${c.main}`);
+      for (const bot of c.botList) {
+        bot.sendMessage("/p leave");
+        bot.sendMessage("/status busy");
+        c.botList[0].sendInvite(bot.bot.username);
+      }
       break;
 
     case inputl === "logout":

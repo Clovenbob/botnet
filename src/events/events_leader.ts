@@ -19,7 +19,7 @@ export default (a: Bot, c: Config) => {
     const message: string = json.toString();
 
     if (message.startsWith("You are currently ")) return;
-
+    if (message.match(/.*\/.*❤     .*\/.*✎ Mana/)) return;
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
 
     if (c.chatEnabled) console.log(json.toAnsi());
