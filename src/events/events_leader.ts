@@ -10,6 +10,7 @@ export default (a: Bot, c: Config) => {
     if (a.online) return;
     if (a.dc) for (let i = 1; i < c.botList.length; i++) c.botList[i].logout();
     a.dc = false;
+    c.viewchat = a.bot.username?.toLowerCase();
     await a.bot.waitForTicks(100);
     a.sendMessage("/p leave");
     a.sendMessage(`/p ${c.main}`);
@@ -19,11 +20,7 @@ export default (a: Bot, c: Config) => {
     if (json["extra"] && json["extra"].length === 100) return;
     const message: string = json.toString();
 
-    if (message.startsWith("You are currently ")) return;
-    if (message.match(/.*\/.*❤     .*\/.*✎ Mana/)) return;
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
-
-    if (c.chatEnabled) console.log(json.toAnsi());
 
     if (
       rankless.startsWith(`party > ${c.main}: `) ||

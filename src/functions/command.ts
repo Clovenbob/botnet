@@ -33,11 +33,19 @@ export default (a: Bot, c: Config) => {
           await c.wait(5000);
           process.exit();
         }
+        break;
+
+      case command === "view":
+        if (all) return respond("No username specified.");
+        c.viewchat = a.bot.username?.toLowerCase();
+        respond(`Viewing chat from ${c.viewchat}.`);
+        break;
 
       case command === "restart":
         respond("Restarting... (this should take <15s)");
         a.logout();
         break;
+
       case command === "reparty":
         if (!a.isLeader) return;
         respond("Repartying...");
@@ -45,15 +53,18 @@ export default (a: Bot, c: Config) => {
         a.sendMessage(`/p leave`);
         a.sendMessage(`/p ${c.main}`);
         for (const bot of c.botList) {
+          if (bot.bot.username === a.bot.username) continue;
           bot.sendMessage("/p leave");
           bot.sendMessage("/status busy");
-          c.botList[0].sendInvite(bot.bot.username);
+          a.sendInvite(bot.bot.username);
         }
         break;
+
       case command === "limbo":
         respond("Switching task to limbo...");
         a.startTask("limbo");
         break;
+
       case command === "skyblock":
         respond("Switching task to skyblock...");
         a.location["server"] = "limbo";

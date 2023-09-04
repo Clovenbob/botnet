@@ -30,9 +30,15 @@ export default (a: Bot, c: Config) => {
     if (json["extra"] && json["extra"].length === 100) return;
 
     const message: string = json.toString();
+    const username = a.bot.username?.toLowerCase();
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
 
-    if (c.main === a.bot.username?.toLowerCase()) {
+    if (message.startsWith("You are currently ")) return;
+    if (message.match(/.*\/.*❤     .*\/.*✎ Mana/)) return;
+    if (c.chatEnabled && username === c.viewchat) {
+      console.log(`${username}: ${json.toAnsi()}`);
+    }
+    if (c.main === username) {
       console.log(c.chalk.red("Main account can not be a bot's username."));
       process.exit();
     }
@@ -73,9 +79,9 @@ export default (a: Bot, c: Config) => {
           }${a.houses}`
         );
         a.matched(true);
-        for (let i = 0; i < c.botList.length; i++) {
-          if (c.botList[i].bot.username !== a.bot.username) {
-            c.botList[i].matched();
+        for (const bot of c.botList) {
+          if (bot.bot.username !== a.bot.username) {
+            bot.matched();
           }
         }
       } else {

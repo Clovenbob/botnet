@@ -48,6 +48,7 @@ export interface Config {
   mainaccount: string;
   chatEnabled: boolean;
   main: string;
+  viewchat: string;
   targetHouse: string;
 
   botList: Bot[];

@@ -12,6 +12,7 @@ const c: Config = {
   mainaccount: config.mainaccount,
   chatEnabled: config.chatEnabled,
   main: config.mainaccount.toLowerCase(),
+  viewchat: "",
   targetHouse: "",
   botList: [],
   serverList: [],

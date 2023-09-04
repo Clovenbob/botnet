@@ -34,6 +34,11 @@ rl.on("line", (input: string) => {
         }!`
       );
       break;
+    case input === "viewnames":
+      for (const bot of c.botList) {
+        console.log(bot.bot.username);
+      }
+      break;
     case input === "kill":
       console.log(c.chalk.red("Killing process..."));
       process.exit();
