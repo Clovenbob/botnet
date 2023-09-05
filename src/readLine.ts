@@ -1,13 +1,16 @@
 import readline from "readline";
-import c from "./config.js";
-import send from "./sendToBots.js";
+import c from "./utils/config.js";
+import send from "./utils/sendToBots.js";
 
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout,
 });
 rl.prompt(true);
 rl.on("line", (input: string) => {
+  if (!c.consoleEnabled)
+    return console.log(
+      "The console is disabled! You can change this in the config file."
+    );
   input = input.toLowerCase();
   switch (true) {
     case input === "help":
@@ -27,10 +30,12 @@ rl.on("line", (input: string) => {
       break;
 
     case input === "togglechat":
-      c.chatEnabled = !c.chatEnabled;
+      c.consoleEnabled = !c.consoleEnabled;
       console.log(
         `Toggled chat ${
-          c.chatEnabled ? c.chalk.greenBright("on") : c.chalk.redBright("off")
+          c.consoleEnabled
+            ? c.chalk.greenBright("on")
+            : c.chalk.redBright("off")
         }!`
       );
       break;
@@ -46,13 +51,8 @@ rl.on("line", (input: string) => {
       send(input, 0);
   }
   /*
-  switch (true) {
-
-    default:
-      console.log(
-        `${c.chalk.redBright(
-          "Unknown command."
-        )}\nType help for a list of commands`
-      );
-  } */
+  console.log(
+    `${c.chalk.redBright("Unknown command.")}\nType help for a list of commands`
+  );
+  */
 });

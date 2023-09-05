@@ -35,7 +35,7 @@ export default (a: Bot, c: Config) => {
 
     if (message.startsWith("You are currently ")) return;
     if (message.match(/.*\/.*❤     .*\/.*✎ Mana/)) return;
-    if (c.chatEnabled && username === c.viewchat) {
+    if (c.consoleEnabled && username === c.viewchat) {
       console.log(`${username}: ${json.toAnsi()}`);
     }
     if (c.main === username) {
@@ -59,7 +59,7 @@ export default (a: Bot, c: Config) => {
         "\nClick the link to visit our website and claim your reward:"
       )
     ) {
-      a.sendMessage(`/pc ${message.slice(60)}`);
+      a.sendMessage(message.slice(60), true);
     }
 
     const serverMatch = message.match(/Sending you to (.+).../);
@@ -74,9 +74,10 @@ export default (a: Bot, c: Config) => {
           a.houses > 9 ? "" : "0"
         }${a.houses}`;
         a.sendMessage(
-          `/pc MATCHED! /visit ${a.bot.username} ${a.houses > 99 ? "" : "0"}${
+          `MATCHED! /visit ${a.bot.username} ${a.houses > 99 ? "" : "0"}${
             a.houses > 9 ? "" : "0"
-          }${a.houses}`
+          }${a.houses}`,
+          true
         );
         a.matched(true);
         for (const bot of c.botList) {

@@ -11,18 +11,22 @@ export default (a: Bot, c: Config) => {
     );
     a.houseTimeout = setTimeout(() => {
       if (a.subTask !== "match") return;
-      const serverString = Object.entries(c.serversMatched)
-        .sort((a, b) => b[1] - a[1])
-        .map(([server, instances]) => `${server} (x${instances})`)
-        .join(", ");
-      if (a.isLeader) a.sendMessage(`/pc ${serverString}`);
-
+      if (a.isLeader) {
+        const serverString = Object.entries(c.serversMatched)
+          .sort((a, b) => b[1] - a[1])
+          .map(([server, instances]) => `${server} (x${instances})`)
+          .join(", ");
+        a.sendMessage(serverString, true);
+      }
       a.serverFails += 1;
       if (a.serverFails >= 100) {
-        a.sendMessage(`/pc Server matching failed too many times! Stopping...`);
+        a.sendMessage(
+          `Server matching failed too many times! Stopping...`,
+          true
+        );
         a.matched();
       } else if (a.houses === 1) {
-        a.sendMessage(`/pc No house found named 001`);
+        a.sendMessage(`No house found named 001`, true);
         a.matched();
       } else {
         a.houses = 0;

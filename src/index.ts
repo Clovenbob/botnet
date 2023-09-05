@@ -3,7 +3,7 @@ import getLocation from "./utils/getLocation.js";
 import startBot from "./utils/startBot.js";
 import accounts from "./.env/accounts.js";
 import c from "./utils/config.js";
-import "./utils/readLine.js";
+import "./readLine.js";
 
 class createBot implements Bot {
   constructor(
@@ -84,7 +84,7 @@ class createBot implements Bot {
 
   startTask: (mainTask?: string, subTask?: string) => void;
   command: (command: string, response: number, all?: boolean) => void;
-  sendMessage: (message?: string) => void;
+  sendMessage: (message?: string, log?: boolean) => void;
   matched: (iMatched?: boolean) => void;
   sendInvite: (user: string) => void;
   promote: (user: string) => void;

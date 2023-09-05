@@ -34,9 +34,9 @@ export default async (a: Bot, c: Config) => {
     }
     if (a.location["map"] !== "Base") {
       if (a.mainTask === "home") a.mainTask = "";
-      a.sendMessage(`/pc ✖ Could not join house ${a.targetHouse}. (5 tries)`);
+      a.sendMessage(`✖ Could not join house ${a.targetHouse}. (5 tries)`, true);
     } else {
-      a.sendMessage(`/pc ✔ Joined ${a.targetHouse}.`);
+      a.sendMessage(`✔ Joined ${a.targetHouse}.`, true);
     }
     a.inTask = false;
     a.startTask();

@@ -9,9 +9,9 @@ export default async (a: Bot, c: Config) => {
     a.sendMessage("/play sb");
     await a.bot.waitForTicks(120);
     if (a.location["gametype"] !== "SKYBLOCK") {
-      a.sendMessage(`/pc ✖ Something went wrong trying to join Skyblock.`);
+      a.sendMessage(`✖ Something went wrong trying to join Skyblock.`, true);
     } else {
-      a.sendMessage(`/pc ✔ Entered Skyblock.`);
+      a.sendMessage(`✔ Entered Skyblock.`, true);
     }
     a.inTask = false;
     a.startTask();

@@ -6,20 +6,7 @@ export default (a: Bot, c: Config) => {
 
     const respond = (message: string) => {
       if (!all || a.isLeader) {
-        switch (response) {
-          case 0:
-            console.log(message);
-            break;
-          case 1:
-            a.sendMessage(`/pc ${message}`);
-            break;
-          case 2:
-            //send discord message (WIP)
-            break;
-          case 3:
-            //send message to server (WIP)
-            break;
-        }
+        a.sendMessage(message, true);
       }
     };
 

@@ -10,9 +10,9 @@ export default async (a: Bot, c: Config) => {
     await a.bot.waitForTicks(120);
     if (a.location["server"] !== "limbo") {
       if (a.mainTask === "limbo") a.mainTask = "";
-      a.sendMessage(`/pc ✖ Something went wrong trying to join limbo.`);
+      a.sendMessage(`✖ Something went wrong trying to join limbo.`, true);
     } else {
-      a.sendMessage(`/pc ✔ Entered Limbo.`);
+      a.sendMessage(`✔ Entered Limbo.`, true);
     }
     a.inTask = false;
     a.startTask();

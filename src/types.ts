@@ -31,7 +31,7 @@ export interface Bot {
 
   startTask: (mainTask?: string, subTask?: string) => void;
   command: (command: string, response: number, all?: boolean) => void;
-  sendMessage: (message?: string) => void;
+  sendMessage: (message?: string, log?: boolean) => void;
   matched: (iMatched?: boolean) => void;
   sendInvite: (user: string) => void;
   promote: (user: string) => void;
@@ -46,7 +46,13 @@ export interface Bot {
 
 export interface Config {
   mainaccount: string;
-  chatEnabled: boolean;
+  loggingEnabled: boolean;
+  consoleEnabled: boolean;
+  partyEnabled: boolean;
+  discordEnabled: boolean;
+  webHookUrl: string;
+  serverEnabled: boolean;
+  serverUrl: string;
   main: string;
   viewchat: string;
   targetHouse: string;
