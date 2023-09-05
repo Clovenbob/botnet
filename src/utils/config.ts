@@ -15,7 +15,7 @@ let config = {
 };
 
 try {
-  config = JSON.parse(fs.readFileSync("../../config.json").toString());
+  config = JSON.parse(fs.readFileSync("./config.json").toString());
 } catch (error) {
   console.error(`Error parsing config file: ${error}`);
   process.exit(1);
