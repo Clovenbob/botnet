@@ -1,7 +1,7 @@
 import { Bot, Location } from "./types";
 import getLocation from "./utils/getLocation.js";
 import startBot from "./utils/startBot.js";
-import accounts from "./.env/accounts.js";
+import accounts from "./utils/accounts.js";
 import c from "./utils/config.js";
 import "./readLine.js";
 

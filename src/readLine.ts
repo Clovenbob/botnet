@@ -7,10 +7,6 @@ const rl = readline.createInterface({
 });
 rl.prompt(true);
 rl.on("line", (input: string) => {
-  if (!c.consoleEnabled)
-    return console.log(
-      "The console is disabled! You can change this in the config file."
-    );
   input = input.toLowerCase();
   switch (true) {
     case input === "help":

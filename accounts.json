@@ -1,0 +1,20 @@
+[
+  {
+    "username": "username@example.com",
+    "password": "password"
+  },
+  {
+    "username": "username2@example.com"
+  },
+  {
+    "username": "username3@example.com",
+    "session": {
+      "accessToken": "",
+      "clientToken": "",
+      "selectedProfile": {
+        "id": "",
+        "name": ""
+      }
+    }
+  }
+]

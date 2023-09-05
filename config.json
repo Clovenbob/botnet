@@ -1,0 +1,14 @@
+{
+  "loggingEnabled": true,
+
+  "consoleEnabled": true,
+
+  "partyEnabled": true,
+  "mainaccount": "username",
+
+  "discordEnabled": true,
+  "webHookUrl": "https://discord.com/api/webhooks/example",
+
+  "serverEnabled": true,
+  "serverUrl": "http://localhost:3000"
+}
