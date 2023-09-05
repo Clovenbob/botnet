@@ -35,7 +35,7 @@ export default (a: Bot, c: Config) => {
 
       case command === "reparty":
         if (!a.isLeader) return;
-        respond("Repartying...");
+        if (c.partyEnabled) respond("Repartying...");
         a.sendMessage(`/p disband`);
         a.sendMessage(`/p leave`);
         a.sendMessage(`/p ${c.main}`);
