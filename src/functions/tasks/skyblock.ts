@@ -1,11 +1,13 @@
 import { Bot, Config } from "../../types";
 
 export default async (a: Bot, c: Config) => {
-  if (a.mainTask === "skyblock" && a.location["server"] === "limbo") {
+  if (a.mainTask === "skyblock" && a.location["gametype"] !== "SKYBLOCK") {
     a.inTask = true;
     await a.bot.waitForTicks(c.random(1, 20));
-    a.sendMessage("/l");
-    await a.bot.waitForTicks(c.random(40, 100));
+    if (a.location["server"] === "limbo") {
+      a.sendMessage("/l");
+      await a.bot.waitForTicks(c.random(40, 100));
+    }
     a.sendMessage("/play sb");
     await a.bot.waitForTicks(120);
     if (a.location["gametype"] !== "SKYBLOCK") {
