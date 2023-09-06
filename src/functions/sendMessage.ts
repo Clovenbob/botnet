@@ -6,7 +6,9 @@ export default (a: Bot, c: Config) => {
 
     if (log) {
       if (!c.loggingEnabled) return;
-      if (c.consoleEnabled) console.log(`${a.bot.username}: ${message}`);
+      if (c.consoleEnabled) {
+        console.log(`${a.bot.username}: ${chalkify(message)}`);
+      }
       //discord
       //server
       if (!c.partyEnabled) return;
@@ -52,5 +54,11 @@ export default (a: Bot, c: Config) => {
       clearInterval(a.intervalId);
       a.isSending = false;
     }
+  };
+
+  const chalkify = (message: string) => {
+    if (message.includes("✔")) message = c.chalk.greenBright(message);
+    else if (message.includes("✖")) message = c.chalk.redBright(message);
+    return message;
   };
 };
