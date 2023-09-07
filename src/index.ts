@@ -30,7 +30,7 @@ class createBot implements Bot {
     this.mainTask = "";
     this.subTask = "";
     this.inTask = false;
-
+    this.inParty = false;
     this.slotToClick = -1;
     this.clickItems = false;
 
@@ -73,6 +73,7 @@ class createBot implements Bot {
   mainTask: string;
   subTask: string;
   inTask: boolean;
+  inParty: boolean;
 
   slotToClick: number;
   clickItems: boolean;
@@ -84,7 +85,7 @@ class createBot implements Bot {
 
   startTask: (mainTask?: string, subTask?: string) => void;
   command: (command: string, response: number, all?: boolean) => void;
-  sendMessage: (message?: string, log?: boolean) => void;
+  sendMessage: (message: string, log?: boolean, time?: number) => void;
   matched: (iMatched?: boolean) => void;
   sendInvite: (user: string) => void;
   promote: (user: string) => void;
@@ -99,14 +100,11 @@ class createBot implements Bot {
 
 console.log("Welcome!\nType help for a list of commands.");
 
-for (let i = 0; i < accounts.length; i++) {
+let isFirst = true;
+for (const account of accounts) {
   c.botList.push(
-    new createBot(
-      !i ? true : false,
-      accounts[i].username,
-      accounts[i].password,
-      accounts[i].session
-    )
+    new createBot(isFirst, account.username, account.password, account.session)
   );
+  isFirst = false;
   await c.wait(c.random(1000, 2000));
 }

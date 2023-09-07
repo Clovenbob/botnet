@@ -8,7 +8,11 @@ export default (a: Bot, c: Config) => {
 
   a.bot.on("spawn", async () => {
     if (a.online) return;
-    if (a.dc) for (let i = 1; i < c.botList.length; i++) c.botList[i].logout();
+    if (a.dc) {
+      for (let i = 1; i < c.botList.length; i++) {
+        c.botList[i].logout();
+      }
+    }
     a.dc = false;
     c.viewchat = a.bot.username?.toLowerCase();
     await a.bot.waitForTicks(100);

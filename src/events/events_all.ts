@@ -1,10 +1,12 @@
 import { Bot, Config } from "../types";
 
 export default (a: Bot, c: Config) => {
+  const leader = c.botList[0];
   a.bot.on("end", async (reason: string) => {
     console.log(c.chalk.red(`${a.bot.username}: ${reason}.\nReconnecting...`));
     a.bot.removeAllListeners();
     a.online = false;
+    a.inParty = false;
     await c.wait(c.random(5000, 10000));
     a.restartBot();
   });
@@ -91,11 +93,12 @@ export default (a: Bot, c: Config) => {
     }
 
     const regex = new RegExp(
-      `^-----------------------------------------------------\\n(${c.botList[0].bot.username?.toLowerCase()}) has invited you to join`
+      `^-----------------------------------------------------\\n(${leader.bot.username?.toLowerCase()}) has invited you to join`
     );
 
     if (regex.test(rankless)) {
-      a.sendMessage(`/p accept ${c.botList[0].bot.username}`);
+      a.sendMessage(`/p accept ${leader.bot.username}`);
+      a.inParty = true;
     }
 
     const l = a.getLocation(message);

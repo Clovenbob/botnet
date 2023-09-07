@@ -20,6 +20,7 @@ export interface Bot {
   mainTask: string;
   subTask: string;
   inTask: boolean;
+  inParty: boolean;
 
   slotToClick: number;
   clickItems: boolean;
@@ -31,7 +32,7 @@ export interface Bot {
 
   startTask: (mainTask?: string, subTask?: string) => void;
   command: (command: string, response: number, all?: boolean) => void;
-  sendMessage: (message?: string, log?: boolean) => void;
+  sendMessage: (message: string, log?: boolean) => void;
   matched: (iMatched?: boolean) => void;
   sendInvite: (user: string) => void;
   promote: (user: string) => void;

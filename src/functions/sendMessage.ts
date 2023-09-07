@@ -1,7 +1,7 @@
 import { Bot, Config } from "../types";
 
 export default (a: Bot, c: Config) => {
-  a.sendMessage = (message = "", log = false) => {
+  a.sendMessage = (message: string, log = false) => {
     if (!a.online) return;
 
     if (log) {
@@ -11,19 +11,18 @@ export default (a: Bot, c: Config) => {
       }
       //discord
       //server
-      if (!c.partyEnabled) return;
+      if (!c.partyEnabled || !a.inParty) return;
       message = `/pc ${message}`;
     }
-    if (message.startsWith("/p ") && !c.partyEnabled) return;
-    const chunkSize = 250; //6 extra
+    if (message.match(/\/p (?:leave|disband)/) && !c.partyEnabled) return;
 
+    const chunkSize = 250; //6 extra
     if (message.length <= chunkSize) {
       a.messageQueue.push(message);
     } else {
       for (let i = 0; i < message.length; i += chunkSize) {
-        let chunk = message.substring(i, i + chunkSize + 1);
-        if (log && !chunk.startsWith("/pc ")) chunk = `/pc ${chunk}`;
-        a.messageQueue.push(chunk);
+        const chunk = message.substring(i, i + chunkSize + 1);
+        a.messageQueue.push(`${log && i !== 0 ? "/pc " : ""}${chunk}`);
       }
     }
 

@@ -3,19 +3,8 @@ import { Config } from "../types";
 import chalk from "chalk";
 import fs from "fs";
 
-let config = {
-  mainaccount: "username",
-  loggingEnabled: true,
-  consoleEnabled: true,
-  partyEnabled: true,
-  discordEnabled: true,
-  webHookUrl: "",
-  serverEnabled: true,
-  serverUrl: "",
-};
-
 try {
-  config = JSON.parse(fs.readFileSync("./config.json").toString());
+  var config = JSON.parse(fs.readFileSync("./config.json").toString());
 } catch (error) {
   console.error(`Error parsing config file: ${error}`);
   process.exit(1);
