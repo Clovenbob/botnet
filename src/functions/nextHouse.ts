@@ -1,46 +1,50 @@
-import { Bot, Config } from "../types";
+import { IAccount } from "../types";
+import config from "../utils/config.js";
+import utils from "../utils/extra.js";
 
-export default (a: Bot, c: Config) => {
-  a.nextHouse = async () => {
-    clearTimeout(a.houseTimeout);
-    if (a.subTask !== "match") return;
-    await a.bot.waitForTicks(c.random(20, 60));
-    a.houses += 1;
-    a.sendMessage(
-      `/home ${a.houses > 99 ? "" : "0"}${a.houses > 9 ? "" : "0"}${a.houses}`
+export default (account: IAccount) => {
+  account.nextHouse = async () => {
+    clearTimeout(account.houseTimeout);
+    if (account.subTask !== "match") return;
+    await account.bot.waitForTicks(utils.random(20, 60));
+    account.houses += 1;
+    account.sendMessage(
+      `/home ${account.houses > 99 ? "" : "0"}${account.houses > 9 ? "" : "0"}${
+        account.houses
+      }`
     );
-    a.houseTimeout = setTimeout(() => {
-      if (a.subTask !== "match") return;
-      if (a.isLeader) {
-        const serverString = Object.entries(c.serversMatched)
+    account.houseTimeout = setTimeout(() => {
+      if (account.subTask !== "match") return;
+      if (account.isLeader) {
+        const serverString = Object.entries(config.serversMatched)
           .sort((a, b) => b[1] - a[1])
           .map(([server, instances]) => `${server} (x${instances})`)
           .join(", ");
-        a.sendMessage(serverString, true);
+        account.sendMessage(serverString, true);
       }
-      a.serverFails += 1;
-      if (a.serverFails >= 100) {
-        a.sendMessage(
+      account.serverFails += 1;
+      if (account.serverFails >= 100) {
+        account.sendMessage(
           `Server matching failed too many times! Stopping...`,
           true
         );
-        a.matched();
-      } else if (a.houses === 1) {
-        a.sendMessage(`No house found named 001`, true);
-        a.matched();
+        account.matched();
+      } else if (account.houses === 1) {
+        account.sendMessage(`No house found named 001`, true);
+        account.matched();
       } else {
-        a.houses = 0;
-        a.sendMessage("/lobby housing");
-        setTimeout(() => a.nextHouse(), c.random(60000, 65000));
+        account.houses = 0;
+        account.sendMessage("/lobby housing");
+        setTimeout(() => account.nextHouse(), utils.random(60000, 65000));
       }
     }, 10000);
   };
 
-  a.matched = (iMatched = false) => {
-    a.subTask = "";
-    a.inTask = false;
-    a.serverFails = 0;
-    a.startTask();
-    if (!iMatched) a.sendMessage("/lobby housing");
+  account.matched = (iMatched = false) => {
+    account.subTask = "";
+    account.inTask = false;
+    account.serverFails = 0;
+    account.startTask();
+    if (!iMatched) account.sendMessage("/lobby housing");
   };
 };

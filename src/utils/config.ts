@@ -1,6 +1,4 @@
-import { random, wait, addServer } from "./extra.js";
-import { Config } from "../types";
-import chalk from "chalk";
+import { IConfig } from "../types";
 import fs from "fs";
 
 try {
@@ -11,7 +9,7 @@ try {
 }
 
 //don't edit:
-const c: Config = {
+const c: IConfig = {
   mainaccount: config.mainaccount,
   loggingEnabled: config.loggingEnabled,
   consoleEnabled: config.consoleEnabled,
@@ -26,10 +24,6 @@ const c: Config = {
   botList: [],
   serverList: [],
   serversMatched: {},
-  chalk: chalk,
-  addServer: addServer,
-  random: random,
-  wait: wait,
 };
 
 export default c;

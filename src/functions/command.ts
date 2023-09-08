@@ -1,72 +1,76 @@
-import { Bot, Config } from "../types";
+import { IAccount } from "../types";
+import config from "../utils/config.js";
+import utils from "../utils/extra.js";
 
-export default (a: Bot, c: Config) => {
-  a.command = async (command: string, response: number, all = false) => {
-    if (!a.online) return;
+export default (account: IAccount) => {
+  account.command = async (command: string, response: number, all = false) => {
+    if (!account.online) return;
 
     const respond = (message: string) => {
-      if (!all || a.isLeader) {
-        a.sendMessage(message, true);
+      if (!all || account.isLeader) {
+        account.sendMessage(message, true);
       }
     };
 
     switch (true) {
       case command.startsWith("logout"):
-        respond(`Logging ${all ? "all accounts" : a.bot.username} out...`);
-        a.bot.removeAllListeners();
-        a.logout();
+        respond(
+          `Logging ${all ? "all accounts" : account.bot.username} out...`
+        );
+        account.bot.removeAllListeners();
+        account.logout();
 
         if (!command.includes("noexit") && all) {
-          await c.wait(5000);
+          await utils.wait(5000);
           process.exit();
         }
         break;
 
       case command === "view":
         if (all) return respond("No username specified.");
-        c.viewchat = a.bot.username?.toLowerCase();
-        respond(`Viewing chat from ${c.viewchat}.`);
+        config.viewchat = account.bot.username?.toLowerCase();
+        respond(`Viewing chat from ${config.viewchat}.`);
         break;
 
       case command === "restart":
         respond("Restarting... (this should take <15s)");
-        a.logout();
+        account.logout();
         break;
 
       case command === "reparty":
-        if (!a.isLeader) return;
-        if (c.partyEnabled) respond("Repartying...");
-        a.sendMessage(`/p disband`);
-        a.sendMessage(`/p leave`);
-        a.sendMessage(`/p ${c.main}`);
-        for (const bot of c.botList) {
-          if (bot.bot.username === a.bot.username) continue;
-          bot.sendMessage("/p leave");
-          bot.sendMessage("/status busy");
-          a.sendInvite(bot.bot.username);
+        if (!account.isLeader) return;
+        if (config.partyEnabled) respond("Repartying...");
+        account.sendMessage(`/p disband`);
+        account.sendMessage(`/p leave`);
+        account.sendMessage(`/p ${config.main}`);
+        for (const current of config.botList) {
+          if (current.bot.username === account.bot.username) continue;
+          current.sendMessage("/p leave");
+          current.sendMessage("/status busy");
+          account.sendInvite(current.bot.username);
         }
         break;
 
       case command === "limbo":
         respond("Switching task to limbo...");
-        a.startTask("limbo");
+        account.startTask("limbo");
         break;
 
       case command === "skyblock":
         respond("Switching task to skyblock...");
-        a.location["server"] = "limbo";
-        a.startTask("skyblock");
+        account.location["server"] = "limbo";
+        account.startTask("skyblock");
         break;
       case command === "reward":
         respond("Claiming daily reward...");
-        a.startTask(undefined, "reward");
+        account.startTask(undefined, "reward");
         break;
 
       case command === "endmatch":
         respond("Matching ended.");
-        clearTimeout(a.houseTimeout);
-        a.inTask = false;
-        a.startTask(undefined, "");
+        clearTimeout(account.houseTimeout);
+        account.inTask = false;
+        account.startTask(undefined, "");
         break;
 
       case command.startsWith("home "):
@@ -77,13 +81,13 @@ export default (a: Bot, c: Config) => {
             : "Invalid format. (owner name|number)"
         );
         if (!replacement.includes(" ")) return;
-        a.targetHouse = replacement;
-        a.location["map"] = "";
-        a.startTask("home");
+        account.targetHouse = replacement;
+        account.location["map"] = "";
+        account.startTask("home");
         break;
 
       case command.startsWith("match "):
-        c.serverList = command
+        config.serverList = command
           .replace("match ", "")
           .toUpperCase()
           .replace("MINI", "mini")
@@ -91,31 +95,34 @@ export default (a: Bot, c: Config) => {
 
         respond(
           `Matching ${
-            c.serverList.length === 1
-              ? c.serverList[0]
-              : c.serverList.length === 2
-              ? c.serverList.join(" and ")
-              : `${c.serverList.slice(0, -1).join(", ")}, and ${
-                  c.serverList[c.serverList.length - 1]
+            config.serverList.length === 1
+              ? config.serverList[0]
+              : config.serverList.length === 2
+              ? config.serverList.join(" and ")
+              : `${config.serverList.slice(0, -1).join(", ")}, and ${
+                  config.serverList[config.serverList.length - 1]
                 }`
           }...`
         );
-        a.startTask(undefined, "match");
+        account.startTask(undefined, "match");
         break;
 
       case command.startsWith("chat "):
-        if (c.main !== c.mainaccount.toLowerCase() && response === 1) {
+        if (
+          config.main !== config.mainaccount.toLowerCase() &&
+          response === 1
+        ) {
           return respond(
-            `Sorry, this feature is only available for ${c.mainaccount}.`
+            `Sorry, this feature is only available for ${config.mainaccount}.`
           );
         }
 
-        a.sendMessage(command.replace("chat ", ""));
+        account.sendMessage(command.replace("chat ", ""));
         break;
 
       case command.startsWith("account "):
-        c.main = command.replace("account ", "");
-        respond(`Switched main account to ${c.main}!`);
+        config.main = command.replace("account ", "");
+        respond(`Switched main account to ${config.main}!`);
         break;
     }
   };

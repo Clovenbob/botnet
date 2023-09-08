@@ -1,38 +1,39 @@
-import { Bot, Config } from "../types";
+import { IAccount } from "../types";
+import config from "../utils/config.js";
 import send from "../utils/sendToBots.js";
 
-export default (a: Bot, c: Config) => {
-  a.bot.on("end", () => {
-    a.dc = true;
+export default (account: IAccount) => {
+  account.bot.on("end", () => {
+    account.dc = true;
   });
 
-  a.bot.on("spawn", async () => {
-    if (a.online) return;
-    if (a.dc) {
-      for (let i = 1; i < c.botList.length; i++) {
-        c.botList[i].logout();
+  account.bot.on("spawn", async () => {
+    if (account.online) return;
+    if (account.dc) {
+      for (let i = 1; i < config.botList.length; i++) {
+        config.botList[i].logout();
       }
     }
-    a.dc = false;
-    c.viewchat = a.bot.username?.toLowerCase();
-    await a.bot.waitForTicks(100);
-    a.sendMessage("/p leave");
-    a.sendMessage(`/p ${c.main}`);
+    account.dc = false;
+    config.viewchat = account.bot.username?.toLowerCase();
+    await account.bot.waitForTicks(100);
+    account.sendMessage("/p leave");
+    account.sendMessage(`/p ${config.main}`);
   });
 
-  a.bot.on("message", (json: any) => {
+  account.bot.on("message", (json: any) => {
     if (json["extra"] && json["extra"].length === 100) return;
     const message: string = json.toString();
 
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
 
     if (
-      rankless.startsWith(`party > ${c.main}: `) ||
-      rankless.startsWith(`party > ${c.mainaccount.toLowerCase()}: `)
+      rankless.startsWith(`party > ${config.main}: `) ||
+      rankless.startsWith(`party > ${config.mainaccount.toLowerCase()}: `)
     ) {
       const command = rankless
-        .replace(`party > ${c.main}: `, "")
-        .replace(`party > ${c.mainaccount.toLowerCase()}: `, "");
+        .replace(`party > ${config.main}: `, "")
+        .replace(`party > ${config.mainaccount.toLowerCase()}: `, "");
       send(command, 1);
     }
   });

@@ -1,45 +1,49 @@
-import { Bot, Config } from "../types";
+import { IAccount } from "../types";
+import config from "../utils/config.js";
+import utils from "../utils/extra.js";
 
-export default (a: Bot, c: Config) => {
-  const leader = c.botList[0];
+export default (account: IAccount) => {
+  const leader = config.botList[0];
 
-  a.bot.on("end", async (reason: string) => {
-    console.log(c.chalk.red(`${a.bot.username}: ${reason}.\nReconnecting...`));
-    a.bot.removeAllListeners();
-    a.online = false;
+  account.bot.on("end", async (reason: string) => {
+    console.log(
+      utils.chalk.red(`${account.bot.username}: ${reason}.\nReconnecting...`)
+    );
+    account.bot.removeAllListeners();
+    account.online = false;
 
     //if offline for 5 mins, remove from the party.
     inPartyTimeout.start();
-    await c.wait(c.random(5000, 10000));
-    a.restartBot();
+    await utils.wait(utils.random(5000, 10000));
+    account.restartBot();
   });
 
-  a.bot.on("spawn", async () => {
-    if (a.online) return;
-    console.log(c.chalk.greenBright(`${a.bot.username}: Spawned in`));
-    await a.bot.waitForTicks(100);
-    a.online = true;
+  account.bot.on("spawn", async () => {
+    if (account.online) return;
+    console.log(utils.chalk.greenBright(`${account.bot.username}: Spawned in`));
+    await account.bot.waitForTicks(100);
+    account.online = true;
     inPartyTimeout.stop();
-    a.sendMessage("/status busy");
+    account.sendMessage("/status busy");
 
     //if not leader, leave the party,
-    if (a.isLeader) return;
-    a.sendMessage("/p leave");
-    await a.bot.waitForTicks(100);
-    c.botList[0].sendInvite(a.bot.username);
+    if (account.isLeader) return;
+    account.sendMessage("/p leave");
+    await account.bot.waitForTicks(100);
+    config.botList[0].sendInvite(account.bot.username);
   });
 
-  a.bot.on("spawn", async () => {
-    await a.bot.waitForTicks(40);
+  account.bot.on("spawn", async () => {
+    await account.bot.waitForTicks(40);
     //send get location message to server
-    a.sendMessage("/locraw");
+    account.sendMessage("/locraw");
   });
 
-  a.bot.on("message", (json: any) => {
+  account.bot.on("message", (json: any) => {
     if (json["extra"] && json["extra"].length === 100) return;
 
     const message: string = json.toString();
-    const username = a.bot.username?.toLowerCase();
+    const username = account.bot.username?.toLowerCase();
     //remove ranks and make string lowercase
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
 
@@ -47,24 +51,24 @@ export default (a: Bot, c: Config) => {
     if (message.startsWith("You are currently ")) return;
     if (message.match(/.*\/.*❤     .*\/.*✎ Mana/)) return;
     //if viewing chat, log the colored message
-    if (c.consoleEnabled && username === c.viewchat) {
+    if (config.consoleEnabled && username === config.viewchat) {
       console.log(`${username}: ${json.toAnsi()}`);
     }
     //exit the program if the main account is a bots username (prevent infinite loop)
-    if (c.main === username) {
-      console.log(c.chalk.red("Main account can not be a bot's username."));
+    if (config.main === username) {
+      console.log(utils.chalk.red("Main account can not be a bot's username."));
       process.exit();
     }
     //if the main account sends a message asking to party, party them.
-    if (rankless.startsWith(`from ${c.main}: party`))
-      c.botList[0].sendInvite(c.main);
+    if (rankless.startsWith(`from ${config.main}: party`))
+      config.botList[0].sendInvite(config.main);
     //accept housing invites from the main account
     if (
       rankless ===
-      `${c.main} invited you to warp to their home. click here to warp`
+      `${config.main} invited you to warp to their home. click here to warp`
     ) {
-      a.sendMessage(json["extra"][3]["clickEvent"]["value"]);
-      a.mainTask = "";
+      account.sendMessage(json["extra"][3]["clickEvent"]["value"]);
+      account.mainTask = "";
     }
     //log daily reward
     if (
@@ -72,55 +76,56 @@ export default (a: Bot, c: Config) => {
         "\nClick the link to visit our website and claim your reward:"
       )
     ) {
-      a.sendMessage(message.slice(60), true);
+      account.sendMessage(message.slice(60), true);
     }
 
     const serverMatch = message.match(/Sending you to (.+).../);
     if (serverMatch) {
-      if (a.subTask !== "match") return;
+      if (account.subTask !== "match") return;
       //adds the server to the matched list
-      c.addServer(serverMatch[1]);
-      if (c.serverList.includes(serverMatch[1])) {
-        clearTimeout(a.houseTimeout);
-        a.mainTask = "home";
-        a.location["map"] = "Base";
-        a.targetHouse = `${a.bot.username} ${a.houses > 99 ? "" : "0"}${
-          a.houses > 9 ? "" : "0"
-        }${a.houses}`;
-        a.sendMessage(
-          `MATCHED! /visit ${a.bot.username} ${a.houses > 99 ? "" : "0"}${
-            a.houses > 9 ? "" : "0"
-          }${a.houses}`,
+      utils.addServer(serverMatch[1]);
+      if (config.serverList.includes(serverMatch[1])) {
+        clearTimeout(account.houseTimeout);
+        account.mainTask = "home";
+        account.location["map"] = "Base";
+        account.targetHouse = `${account.bot.username} ${
+          account.houses > 99 ? "" : "0"
+        }${account.houses > 9 ? "" : "0"}${account.houses}`;
+        account.sendMessage(
+          `MATCHED! /visit ${account.bot.username} ${
+            account.houses > 99 ? "" : "0"
+          }${account.houses > 9 ? "" : "0"}${account.houses}`,
           true
         );
-        a.matched(true);
-        for (const bot of c.botList) {
-          if (bot.bot.username !== a.bot.username) {
-            bot.matched();
+        account.matched(true);
+        for (const currentAccount of config.botList) {
+          if (currentAccount.bot.username !== account.bot.username) {
+            currentAccount.matched();
           }
         }
       } else {
-        a.nextHouse();
+        account.nextHouse();
       }
     }
     //accept party invites from the leader bot
-    const regex = new RegExp(
-      `^-----------------------------------------------------\\n(${leader.bot.username?.toLowerCase()}) has invited you to join`
-    );
 
-    if (regex.test(rankless)) {
-      a.sendMessage(`/p accept ${leader.bot.username}`);
-      a.inParty = true;
+    if (
+      rankless.startsWith(
+        `-----------------------------------------------------\\n(${leader.bot.username?.toLowerCase()}) has invited you to join`
+      )
+    ) {
+      account.sendMessage(`/p accept ${leader.bot.username}`);
+      account.inParty = true;
     }
     //update the bot's location
-    const l = a.getLocation(message);
-    if (l["valid"] && l !== a.location) {
-      a.location = l;
-      a.startTask();
+    const l = account.getLocation(message);
+    if (l["valid"] && l !== account.location) {
+      account.location = l;
+      account.startTask();
     }
   });
 
-  a.bot.on(
+  account.bot.on(
     "windowOpen",
     async (window: {
       requiresConfirmation: boolean;
@@ -130,36 +135,36 @@ export default (a: Bot, c: Config) => {
       //fix erros
       window.requiresConfirmation = false;
       //if not clicking items, return;
-      if (a.slotToClick === -1) return;
-      if (a.clickItems) {
+      if (account.slotToClick === -1) return;
+      if (account.clickItems) {
         for (let i = 0; i < window.slots.length; i++) {
           if (!window.slots[i]) continue;
-          if (a.slotToClick === 0) {
-            await a.bot.clickWindow(i, 0, 0);
+          if (account.slotToClick === 0) {
+            await account.bot.clickWindow(i, 0, 0);
             break;
           }
-          a.slotToClick--;
+          account.slotToClick--;
         }
       } else {
-        await a.bot.clickWindow(a.slotToClick, 0, 0);
-        a.slotToClick = -1;
+        await account.bot.clickWindow(account.slotToClick, 0, 0);
+        account.slotToClick = -1;
       }
     }
   );
   //on error, reconnect
-  a.bot.on("error", async (error: any) => {
+  account.bot.on("error", async (error: any) => {
     console.log(
-      c.chalk.red(
+      utils.chalk.red(
         `${error} (${
-          a.bot.username ? a.bot.username : a.email
+          account.bot.username ? account.bot.username : account.email
         })\nReconnecting...`
       )
     );
-    a.bot?.quit();
-    a.bot?.removeAllListeners();
-    a.online = false;
-    await c.wait(c.random(5000, 10000));
-    a.restartBot();
+    account.bot?.quit();
+    account.bot?.removeAllListeners();
+    account.online = false;
+    await utils.wait(utils.random(5000, 10000));
+    account.restartBot();
   });
 
   const inPartyTimeout: {
@@ -173,7 +178,7 @@ export default (a: Bot, c: Config) => {
       if (!inPartyTimeout.active) {
         inPartyTimeout.active = true;
         inPartyTimeout.timeout = setTimeout(() => {
-          a.inParty = false;
+          account.inParty = false;
           inPartyTimeout.active = false;
         }, 5 * 60 * 1000);
       }

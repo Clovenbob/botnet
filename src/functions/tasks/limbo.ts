@@ -1,21 +1,22 @@
-import { Bot, Config } from "../../types";
+import { IAccount } from "../../types";
+import utils from "../../utils/extra.js";
 
-export default async (a: Bot, c: Config) => {
-  if (a.mainTask === "limbo" && a.location["server"] !== "limbo") {
-    a.inTask = true;
-    await a.bot.waitForTicks(c.random(1, 20));
-    a.sendMessage("/lobby housing");
-    await a.bot.waitForTicks(c.random(40, 100));
-    a.sendMessage("§");
-    await a.bot.waitForTicks(120);
-    if (a.location["server"] !== "limbo") {
-      if (a.mainTask === "limbo") a.mainTask = "";
-      a.sendMessage(`✖ Something went wrong trying to join limbo.`, true);
+export default async (account: IAccount) => {
+  if (account.mainTask === "limbo" && account.location["server"] !== "limbo") {
+    account.inTask = true;
+    await account.bot.waitForTicks(utils.random(1, 20));
+    account.sendMessage("/lobby housing");
+    await account.bot.waitForTicks(utils.random(40, 100));
+    account.sendMessage("§");
+    await account.bot.waitForTicks(120);
+    if (account.location["server"] !== "limbo") {
+      if (account.mainTask === "limbo") account.mainTask = "";
+      account.sendMessage(`✖ Something went wrong trying to join limbo.`, true);
     } else {
-      a.sendMessage(`✔ Entered Limbo.`, true);
+      account.sendMessage(`✔ Entered Limbo.`, true);
     }
-    a.inTask = false;
-    a.startTask();
+    account.inTask = false;
+    account.startTask();
     return true;
   } else return false;
 };

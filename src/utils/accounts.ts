@@ -1,8 +1,8 @@
-import { Accounts } from "../types";
+import { IAccounts } from "../types";
 import fs from "fs";
 
 try {
-  var accounts: Accounts[] = JSON.parse(
+  var accounts: IAccounts[] = JSON.parse(
     fs.readFileSync("./accounts.json").toString()
   );
 } catch (error) {
