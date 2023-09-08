@@ -7,16 +7,23 @@ export default async (account: IAccount) => {
     account.location["gametype"] !== "SKYBLOCK"
   ) {
     account.inTask = true;
-    await account.bot.waitForTicks(utils.random(1, 20));
-    if (account.location["server"] === "limbo") {
-      account.sendMessage("/l");
-      await account.bot.waitForTicks(utils.random(40, 100));
+
+    for (let i = 0; i < 5; i++) {
+      await account.bot.waitForTicks(utils.random(1, 20));
+
+      if (account.location["server"] === "limbo") {
+        account.sendMessage("/l");
+        await account.bot.waitForTicks(utils.random(40, 100));
+      }
+
+      account.sendMessage("/play sb");
+      await account.bot.waitForTicks(120);
+
+      if (account.location["gametype"] === "SKYBLOCK") break;
     }
-    account.sendMessage("/play sb");
-    await account.bot.waitForTicks(120);
     if (account.location["gametype"] !== "SKYBLOCK") {
       account.sendMessage(
-        `✖ Something went wrong trying to join Skyblock.`,
+        `✖ Something went wrong trying to join Skyblock. (5 tries)`,
         true
       );
     } else {
