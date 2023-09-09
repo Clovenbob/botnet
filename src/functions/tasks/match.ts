@@ -1,13 +1,14 @@
-import { Bot, Config } from "../../types";
+import { IAccount } from "../../types";
+import utils from "../../utils/extra.js";
 
-export default async (a: Bot, c: Config) => {
-  if (!a.inTask && a.subTask === "match") {
-    a.inTask = true;
-    a.houses = 0;
-    await a.bot.waitForTicks(c.random(1, 20));
-    a.bot.chat("/lobby housing");
-    await a.bot.waitForTicks(c.random(40, 80));
-    a.nextHouse();
+export default async (account: IAccount) => {
+  if (!account.inTask && account.subTask === "match") {
+    account.inTask = true;
+    account.houses = 0;
+    await account.bot.waitForTicks(utils.random(1, 20));
+    account.bot.chat("/lobby housing");
+    await account.bot.waitForTicks(utils.random(40, 80));
+    account.nextHouse();
 
     return true;
   } else return false;

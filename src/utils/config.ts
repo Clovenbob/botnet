@@ -1,28 +1,15 @@
-import { random, wait, addServer } from "./extra.js";
-import { Config } from "../types";
-import chalk from "chalk";
+import { IConfig } from "../types";
 import fs from "fs";
 
-let config = {
-  mainaccount: "username",
-  loggingEnabled: true,
-  consoleEnabled: true,
-  partyEnabled: true,
-  discordEnabled: true,
-  webHookUrl: "",
-  serverEnabled: true,
-  serverUrl: "",
-};
-
 try {
-  config = JSON.parse(fs.readFileSync("./config.json").toString());
+  var config = JSON.parse(fs.readFileSync("./config.json").toString());
 } catch (error) {
   console.error(`Error parsing config file: ${error}`);
   process.exit(1);
 }
 
 //don't edit:
-const c: Config = {
+const c: IConfig = {
   mainaccount: config.mainaccount,
   loggingEnabled: config.loggingEnabled,
   consoleEnabled: config.consoleEnabled,
@@ -37,10 +24,6 @@ const c: Config = {
   botList: [],
   serverList: [],
   serversMatched: {},
-  chalk: chalk,
-  addServer: addServer,
-  random: random,
-  wait: wait,
 };
 
 export default c;

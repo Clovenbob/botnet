@@ -1,11 +1,12 @@
-import { Bot, Location } from "./types";
+import { IAccount, ILocation } from "./types";
 import getLocation from "./utils/getLocation.js";
 import startBot from "./utils/startBot.js";
 import accounts from "./utils/accounts.js";
+import utils from "./utils/extra.js";
 import c from "./utils/config.js";
 import "./readLine.js";
 
-class createBot implements Bot {
+class Account implements IAccount {
   constructor(
     firstBot: boolean,
     email: string,
@@ -30,7 +31,7 @@ class createBot implements Bot {
     this.mainTask = "";
     this.subTask = "";
     this.inTask = false;
-
+    this.inParty = false;
     this.slotToClick = -1;
     this.clickItems = false;
 
@@ -52,7 +53,7 @@ class createBot implements Bot {
     this.leave = () => {};
 
     this.bot;
-    startBot(this, c);
+    startBot(this);
   }
 
   isLeader: boolean;
@@ -63,8 +64,8 @@ class createBot implements Bot {
   online: boolean;
   dc: boolean;
 
-  getLocation: (message: string) => Location;
-  location: Location;
+  getLocation: (message: string) => ILocation;
+  location: ILocation;
 
   messageQueue: string[];
   isSending: boolean;
@@ -73,6 +74,7 @@ class createBot implements Bot {
   mainTask: string;
   subTask: string;
   inTask: boolean;
+  inParty: boolean;
 
   slotToClick: number;
   clickItems: boolean;
@@ -84,7 +86,7 @@ class createBot implements Bot {
 
   startTask: (mainTask?: string, subTask?: string) => void;
   command: (command: string, response: number, all?: boolean) => void;
-  sendMessage: (message?: string, log?: boolean) => void;
+  sendMessage: (message: string, log?: boolean, time?: number) => void;
   matched: (iMatched?: boolean) => void;
   sendInvite: (user: string) => void;
   promote: (user: string) => void;
@@ -99,14 +101,11 @@ class createBot implements Bot {
 
 console.log("Welcome!\nType help for a list of commands.");
 
-for (let i = 0; i < accounts.length; i++) {
+let isFirst = true;
+for (const account of accounts) {
   c.botList.push(
-    new createBot(
-      !i ? true : false,
-      accounts[i].username,
-      accounts[i].password,
-      accounts[i].session
-    )
+    new Account(isFirst, account.username, account.password, account.session)
   );
-  await c.wait(c.random(1000, 2000));
+  isFirst = false;
+  await utils.wait(utils.random(1000, 2000));
 }

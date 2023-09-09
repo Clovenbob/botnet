@@ -1,24 +1,25 @@
-import { Bot, Config } from "../types";
+import { IAccount } from "../types";
+import utils from "../utils/extra.js";
 
-export default (a: Bot, c: Config) => {
-  a.logout = async () => {
-    if (!a.online) return;
-    a.messageQueue.splice(1);
-    if (a.isLeader) a.sendMessage("/p disband");
-    a.sendMessage("/status offline");
-    await c.wait(c.random(1700, 4900));
-    a.bot.quit();
+export default (account: IAccount) => {
+  account.logout = async () => {
+    if (!account.online) return;
+    account.messageQueue.splice(1);
+    if (account.isLeader) account.sendMessage("/p disband");
+    account.sendMessage("/status offline");
+    await utils.wait(utils.random(1700, 4900));
+    account.bot.quit();
   };
 
-  a.leave = () => {
-    a.sendMessage("/p leave");
+  account.leave = () => {
+    account.sendMessage("/p leave");
   };
 
-  a.promote = (user: string) => {
-    a.sendMessage(`/p promote ${user}`);
+  account.promote = (user: string) => {
+    account.sendMessage(`/p promote ${user}`);
   };
 
-  a.sendInvite = (user: string) => {
-    a.sendMessage(`/p ${user}`);
+  account.sendInvite = (user: string) => {
+    account.sendMessage(`/p ${user}`);
   };
 };

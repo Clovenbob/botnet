@@ -1,7 +1,7 @@
 import mineflayer from "mineflayer";
 import chalk from "chalk";
 
-export interface Bot {
+export interface IAccount {
   isLeader: boolean;
   email: string;
   password?: string;
@@ -10,8 +10,8 @@ export interface Bot {
   online: boolean;
   dc: boolean;
 
-  getLocation: (message: string) => Location;
-  location: Location;
+  getLocation: (message: string) => ILocation;
+  location: ILocation;
 
   messageQueue: string[];
   isSending: boolean;
@@ -20,6 +20,7 @@ export interface Bot {
   mainTask: string;
   subTask: string;
   inTask: boolean;
+  inParty: boolean;
 
   slotToClick: number;
   clickItems: boolean;
@@ -31,7 +32,7 @@ export interface Bot {
 
   startTask: (mainTask?: string, subTask?: string) => void;
   command: (command: string, response: number, all?: boolean) => void;
-  sendMessage: (message?: string, log?: boolean) => void;
+  sendMessage: (message: string, log?: boolean) => void;
   matched: (iMatched?: boolean) => void;
   sendInvite: (user: string) => void;
   promote: (user: string) => void;
@@ -44,7 +45,7 @@ export interface Bot {
   bot: mineflayer.Bot;
 }
 
-export interface Config {
+export interface IConfig {
   mainaccount: string;
   loggingEnabled: boolean;
   consoleEnabled: boolean;
@@ -57,23 +58,25 @@ export interface Config {
   viewchat: string;
   targetHouse: string;
 
-  botList: Bot[];
+  botList: IAccount[];
   serverList: string[];
   serversMatched: { [server: string]: number };
+}
 
+export interface IUtils {
   chalk: typeof chalk;
   addServer: (server: string) => void;
   random: (min: number, max: number) => number;
   wait: (ms: number) => Promise<void>;
 }
 
-export interface Accounts {
+export interface IAccounts {
   username: string;
   password?: string;
   session?: { accessToken?: string; clientToken?: string };
 }
 
-export interface Location {
+export interface ILocation {
   valid: boolean;
   [key: string]: string | boolean;
 }

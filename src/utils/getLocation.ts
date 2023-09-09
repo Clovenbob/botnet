@@ -1,8 +1,8 @@
-import { Location } from "../types";
+import { ILocation } from "../types";
 
 export default (message: string) => {
   const keys = ["lobbyname", "gametype", "server", "map"];
-  const location: Location = { valid: true };
+  const location: ILocation = { valid: true };
 
   if (message.startsWith("{")) {
     const json = JSON.parse(message);
