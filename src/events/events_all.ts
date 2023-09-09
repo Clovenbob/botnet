@@ -3,11 +3,9 @@ import config from "../utils/config.js";
 import utils from "../utils/extra.js";
 
 export default (account: IAccount) => {
-  const leader = config.botList[0];
-
   account.bot.on("end", async (reason: string) => {
     console.log(
-      utils.chalk.red(`${account.bot.username}: ${reason}.\nReconnecting...`)
+      utils.chalk.red(`${account.bot.username}: ${reason}.\nReconnecting...`),
     );
     account.bot.removeAllListeners();
     account.online = false;
@@ -26,7 +24,6 @@ export default (account: IAccount) => {
     inPartyTimeout.stop();
     account.sendMessage("/status busy");
 
-    //if not leader, leave the party,
     if (account.isLeader) return;
     account.sendMessage("/p leave");
     await account.bot.waitForTicks(100);
@@ -35,7 +32,6 @@ export default (account: IAccount) => {
 
   account.bot.on("spawn", async () => {
     await account.bot.waitForTicks(40);
-    //send get location message to server
     account.sendMessage("/locraw");
   });
 
@@ -44,80 +40,70 @@ export default (account: IAccount) => {
 
     const message: string = json.toString();
     const username = account.bot.username?.toLowerCase();
-    //remove ranks and make string lowercase
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
 
-    //remove spam messages
     if (message.startsWith("You are currently ")) return;
     if (message.match(/.*\/.*❤     .*\/.*✎ Mana/)) return;
-    //if viewing chat, log the colored message
     if (config.consoleEnabled && username === config.viewchat) {
       console.log(`${username}: ${json.toAnsi()}`);
     }
-    //exit the program if the main account is a bots username (prevent infinite loop)
     if (config.main === username) {
       console.log(utils.chalk.red("Main account can not be a bot's username."));
       process.exit();
     }
-    //if the main account sends a message asking to party, party them.
-    if (rankless.startsWith(`from ${config.main}: party`))
+    if (rankless.startsWith(`from ${config.main}: party`)) {
       config.botList[0].sendInvite(config.main);
-    //accept housing invites from the main account
-    if (
+    } else if (
       rankless ===
       `${config.main} invited you to warp to their home. click here to warp`
     ) {
       account.sendMessage(json["extra"][3]["clickEvent"]["value"]);
       account.mainTask = "";
-    }
-    //log daily reward
-    if (
+    } else if (
       message.startsWith(
-        "\nClick the link to visit our website and claim your reward:"
+        "\nClick the link to visit our website and claim your reward:",
       )
     ) {
       account.sendMessage(message.slice(60), true);
-    }
-
-    const serverMatch = message.match(/Sending you to (.+).../);
-    if (serverMatch) {
-      if (account.subTask !== "match") return;
-      //adds the server to the matched list
-      utils.addServer(serverMatch[1]);
-      if (config.serverList.includes(serverMatch[1])) {
-        clearTimeout(account.houseTimeout);
-        account.mainTask = "home";
-        account.location["map"] = "Base";
-        account.targetHouse = `${account.bot.username} ${
-          account.houses > 99 ? "" : "0"
-        }${account.houses > 9 ? "" : "0"}${account.houses}`;
-        account.sendMessage(
-          `MATCHED! /visit ${account.bot.username} ${
-            account.houses > 99 ? "" : "0"
-          }${account.houses > 9 ? "" : "0"}${account.houses}`,
-          true
-        );
-        account.matched(true);
-        for (const currentAccount of config.botList) {
-          if (currentAccount.bot.username !== account.bot.username) {
-            currentAccount.matched();
-          }
-        }
-      } else {
-        account.nextHouse();
-      }
-    }
-    //accept party invites from the leader bot
-
-    if (
+    } else if (
       rankless.startsWith(
-        `-----------------------------------------------------\\n(${leader.bot.username?.toLowerCase()}) has invited you to join`
+        `-----------------------------------------------------\\n(${config.botList[0].bot.username?.toLowerCase()}) has invited you to join`,
       )
     ) {
-      account.sendMessage(`/p accept ${leader.bot.username}`);
+      account.sendMessage(`/p accept ${config.botList[0].bot.username}`);
       account.inParty = true;
+    } else if (message.startsWith("Sending you to ")) {
+      const serverMatch = message.match(/Sending you to (.+).../);
+      if (serverMatch) {
+        if (account.subTask !== "match") return;
+        utils.addServer(serverMatch[1]);
+
+        if (config.serverList.includes(serverMatch[1])) {
+          clearTimeout(account.houseTimeout);
+          account.mainTask = "home";
+          account.location["map"] = "Base";
+          account.targetHouse = `${account.bot.username} ${
+            account.houses > 99 ? "" : "0"
+          }${account.houses > 9 ? "" : "0"}${account.houses}`;
+          account.sendMessage(
+            `MATCHED! /visit ${account.bot.username} ${
+              account.houses > 99 ? "" : "0"
+            }${account.houses > 9 ? "" : "0"}${account.houses}`,
+            true,
+          );
+          account.matched(true);
+
+          for (const currentAccount of config.botList) {
+            if (currentAccount.bot.username !== account.bot.username) {
+              currentAccount.matched();
+            }
+          }
+        } else {
+          account.nextHouse();
+        }
+      }
     }
-    //update the bot's location
+
     const l = account.getLocation(message);
     if (l["valid"] && l !== account.location) {
       account.location = l;
@@ -132,9 +118,7 @@ export default (account: IAccount) => {
       slots: string | any[];
     }) => {
       if (!window) return;
-      //fix erros
       window.requiresConfirmation = false;
-      //if not clicking items, return;
       if (account.slotToClick === -1) return;
       if (account.clickItems) {
         for (let i = 0; i < window.slots.length; i++) {
@@ -149,16 +133,16 @@ export default (account: IAccount) => {
         await account.bot.clickWindow(account.slotToClick, 0, 0);
         account.slotToClick = -1;
       }
-    }
+    },
   );
-  //on error, reconnect
+
   account.bot.on("error", async (error: any) => {
     console.log(
       utils.chalk.red(
         `${error} (${
           account.bot.username ? account.bot.username : account.email
-        })\nReconnecting...`
-      )
+        })\nReconnecting...`,
+      ),
     );
     account.bot?.quit();
     account.bot?.removeAllListeners();
