@@ -13,17 +13,18 @@ export default (account: IAccount) => {
       }
       //discord
       //server
-      if (!config.partyEnabled || !account.inParty) return;
+      if (!config.partyEnabled || (!account.inParty && !account.isLeader))
+        return;
       message = `/pc ${message}`;
     }
-    if (message.match(/\/p (?:leave|disband)/) && !config.partyEnabled) return;
+    if (!config.partyEnabled && message.startsWith("/p ")) return;
 
     const chunkSize = 250; //6 extra
     if (message.length <= chunkSize) {
       account.messageQueue.push(message);
     } else {
       for (let i = 0; i < message.length; i += chunkSize) {
-        const chunk = message.substring(i, i + chunkSize + 1);
+        const chunk = message.substring(i, i + chunkSize);
         account.messageQueue.push(`${log && i !== 0 ? "/pc " : ""}${chunk}`);
       }
     }
@@ -42,7 +43,7 @@ export default (account: IAccount) => {
     if (account.messageQueue.length > 10) {
       account.messageQueue = [];
       console.log(
-        utils.chalk.red(`${account.bot.username}: Too many messages in queue.`)
+        utils.chalk.red(`${account.bot.username}: Too many messages in queue.`),
       );
     }
 

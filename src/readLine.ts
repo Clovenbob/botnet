@@ -13,16 +13,16 @@ rl.on("line", (input: string) => {
     case input === "help":
       console.log(
         `\n${utils.chalk.blueBright("Commands")}:\n\n ${utils.chalk.yellow(
-          "togglechat"
+          "togglechat",
         )}: Turns chat on/off.\n ${utils.chalk.yellow(
-          "chat (message)"
+          "chat (message)",
         )}: Send a message.\n ${utils.chalk.yellow(
-          "account (name)"
+          "account (name)",
         )}: Switches the ingame command account.\n ${utils.chalk.yellow(
-          "logout"
+          "logout",
         )}: Logout every account within 5 seconds.\n ${utils.chalk.yellow(
-          "kill"
-        )}: Instantly logout every account.\n`
+          "kill",
+        )}: Instantly logout every account.\n`,
       );
       break;
 
@@ -33,7 +33,7 @@ rl.on("line", (input: string) => {
           config.consoleEnabled
             ? utils.chalk.greenBright("on")
             : utils.chalk.redBright("off")
-        }!`
+        }!`,
       );
       break;
     case input === "viewnames":
@@ -48,4 +48,5 @@ rl.on("line", (input: string) => {
       send(input, 0);
   }
   /* console.log(`${utils.chalk.redBright("Unknown command.")}\nType help for a list of commands`); */
+  rl.prompt(true);
 });

@@ -12,7 +12,7 @@ export default (account: IAccount) => {
 
     //if offline for 5 mins, remove from the party.
     inPartyTimeout.start();
-    await utils.wait(utils.random(5000, 10000));
+    await utils.wait(utils.random(20000, 25000));
     account.restartBot();
   });
 
@@ -45,7 +45,7 @@ export default (account: IAccount) => {
     if (message.startsWith("You are currently ")) return;
     if (message.match(/.*\/.*❤     .*\/.*✎ Mana/)) return;
     if (config.consoleEnabled && username === config.viewchat) {
-      console.log(`${username}: ${json.toAnsi()}`);
+      console.log(`${account.bot.username}: ${json.toAnsi()}`);
     }
     if (config.main === username) {
       console.log(utils.chalk.red("Main account can not be a bot's username."));
@@ -66,9 +66,10 @@ export default (account: IAccount) => {
     ) {
       account.sendMessage(message.slice(60), true);
     } else if (
-      rankless.startsWith(
-        `-----------------------------------------------------\\n(${config.botList[0].bot.username?.toLowerCase()}) has invited you to join`,
-      )
+      rankless.includes(
+        `${config.botList[0].bot.username?.toLowerCase()} has invited you to join their party!`,
+      ) &&
+      rankless.startsWith("----")
     ) {
       account.sendMessage(`/p accept ${config.botList[0].bot.username}`);
       account.inParty = true;

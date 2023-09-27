@@ -15,11 +15,11 @@ export default (account: IAccount) => {
     account.sendMessage("/p leave");
   };
 
-  account.promote = (user: string) => {
+  account.promote = (user) => {
     account.sendMessage(`/p promote ${user}`);
   };
 
-  account.sendInvite = (user: string) => {
+  account.sendInvite = (user) => {
     account.sendMessage(`/p ${user}`);
   };
 };
