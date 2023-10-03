@@ -1,5 +1,5 @@
 import { IAccount } from "../../types";
-import utils from "../../utils/extra.js";
+import { random } from "../../utils/extra.js";
 
 export default async (account: IAccount) => {
   if (account.mainTask === "home" && account.location["map"] !== "Base") {
@@ -20,7 +20,7 @@ export default async (account: IAccount) => {
     await account.bot.waitForTicks(40);
 
     for (let i = 0; i < 5; i++) {
-      await account.bot.waitForTicks(utils.random(1, 100));
+      await account.bot.waitForTicks(random(1, 100));
       if (house.match(/^[1-9]\d*$/)) {
         account.slotToClick = parseInt(house) - 1;
         account.clickItems = true;
@@ -37,7 +37,7 @@ export default async (account: IAccount) => {
       if (account.mainTask === "home") account.mainTask = "";
       account.sendMessage(
         `✖ Could not join house ${account.targetHouse}. (5 tries)`,
-        true
+        true,
       );
     } else {
       account.sendMessage(`✔ Joined ${account.targetHouse}.`, true);

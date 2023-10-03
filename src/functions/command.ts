@@ -1,6 +1,6 @@
 import { IAccount } from "../types";
 import config from "../utils/config.js";
-import utils from "../utils/extra.js";
+import { wait } from "../utils/extra.js";
 
 export default (account: IAccount) => {
   account.command = async (command: string, response: number, all = false) => {
@@ -15,13 +15,13 @@ export default (account: IAccount) => {
     switch (true) {
       case command.startsWith("logout"):
         respond(
-          `Logging ${all ? "all accounts" : account.bot.username} out...`
+          `Logging ${all ? "all accounts" : account.bot.username} out...`,
         );
         account.bot.removeAllListeners();
         account.logout();
 
         if (!command.includes("noexit") && all) {
-          await utils.wait(5000);
+          await wait(5000);
           process.exit();
         }
         break;
@@ -78,7 +78,7 @@ export default (account: IAccount) => {
         respond(
           replacement.includes(" ")
             ? `Switching task to home... (${replacement})`
-            : "Invalid format. (owner name|number)"
+            : "Invalid format. (owner name|number)",
         );
         if (!replacement.includes(" ")) return;
         account.targetHouse = replacement;
@@ -102,7 +102,7 @@ export default (account: IAccount) => {
               : `${config.serverList.slice(0, -1).join(", ")}, and ${
                   config.serverList[config.serverList.length - 1]
                 }`
-          }...`
+          }...`,
         );
         account.startTask(undefined, "match");
         break;
@@ -113,7 +113,7 @@ export default (account: IAccount) => {
           response === 1
         ) {
           return respond(
-            `Sorry, this feature is only available for ${config.mainaccount}.`
+            `Sorry, this feature is only available for ${config.mainaccount}.`,
           );
         }
 

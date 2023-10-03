@@ -2,7 +2,7 @@ import { IAccount, ILocation } from "./types";
 import getLocation from "./utils/getLocation.js";
 import startBot from "./utils/startBot.js";
 import accounts from "./utils/accounts.js";
-import utils from "./utils/extra.js";
+import { random, wait } from "./utils/extra.js";
 import c from "./utils/config.js";
 import "./readLine.js";
 
@@ -11,7 +11,7 @@ class Account implements IAccount {
     firstBot: boolean,
     email: string,
     password?: string,
-    session?: { accessToken?: string; clientToken?: string }
+    session?: { accessToken?: string; clientToken?: string },
   ) {
     this.isLeader = firstBot;
     this.email = email;
@@ -52,7 +52,6 @@ class Account implements IAccount {
     this.logout = () => {};
     this.leave = () => {};
 
-    this.bot;
     startBot(this);
   }
 
@@ -104,8 +103,8 @@ console.log("Welcome!\nType help for a list of commands.");
 let isFirst = true;
 for (const account of accounts) {
   c.botList.push(
-    new Account(isFirst, account.username, account.password, account.session)
+    new Account(isFirst, account.username, account.password, account.session),
   );
   isFirst = false;
-  await utils.wait(utils.random(1000, 2000));
+  await wait(random(1000, 2000));
 }

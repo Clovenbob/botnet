@@ -1,11 +1,10 @@
 import mineflayer from "mineflayer";
-import chalk from "chalk";
 
 export interface IAccount {
   isLeader: boolean;
   email: string;
   password?: string;
-  session?: { accessToken?: string; clientToken?: string };
+  session?: any;
 
   online: boolean;
   dc: boolean;
@@ -64,7 +63,6 @@ export interface IConfig {
 }
 
 export interface IUtils {
-  chalk: typeof chalk;
   addServer: (server: string) => void;
   random: (min: number, max: number) => number;
   wait: (ms: number) => Promise<void>;

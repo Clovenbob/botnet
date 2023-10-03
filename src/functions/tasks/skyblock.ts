@@ -1,5 +1,5 @@
 import { IAccount } from "../../types";
-import utils from "../../utils/extra.js";
+import { random } from "../../utils/extra.js";
 
 export default async (account: IAccount) => {
   if (
@@ -9,11 +9,11 @@ export default async (account: IAccount) => {
     account.inTask = true;
 
     for (let i = 0; i < 5; i++) {
-      await account.bot.waitForTicks(utils.random(1, 20));
+      await account.bot.waitForTicks(random(1, 20));
 
       if (account.location["server"] === "limbo") {
         account.sendMessage("/l");
-        await account.bot.waitForTicks(utils.random(40, 100));
+        await account.bot.waitForTicks(random(40, 100));
       }
 
       account.sendMessage("/play sb");
@@ -24,7 +24,7 @@ export default async (account: IAccount) => {
     if (account.location["gametype"] !== "SKYBLOCK") {
       account.sendMessage(
         `✖ Something went wrong trying to join Skyblock. (5 tries)`,
-        true
+        true,
       );
     } else {
       account.sendMessage(`✔ Entered Skyblock.`, true);

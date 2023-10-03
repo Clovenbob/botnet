@@ -1,6 +1,6 @@
 import { IAccount } from "../types";
 import config from "../utils/config.js";
-import utils from "../utils/extra.js";
+import chalk from "chalk";
 
 export default (account: IAccount) => {
   account.sendMessage = (message: string, log = false) => {
@@ -43,7 +43,7 @@ export default (account: IAccount) => {
     if (account.messageQueue.length > 10) {
       account.messageQueue = [];
       console.log(
-        utils.chalk.red(`${account.bot.username}: Too many messages in queue.`),
+        chalk.red(`${account.bot.username}: Too many messages in queue.`),
       );
     }
 
@@ -59,8 +59,8 @@ export default (account: IAccount) => {
   };
 
   const chalkify = (message: string) => {
-    if (message.includes("✔")) message = utils.chalk.greenBright(message);
-    else if (message.includes("✖")) message = utils.chalk.redBright(message);
+    if (message.includes("✔")) message = chalk.greenBright(message);
+    else if (message.includes("✖")) message = chalk.redBright(message);
     return message;
   };
 };

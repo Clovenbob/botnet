@@ -9,7 +9,7 @@ export default (account: IAccount) => {
     if (account.session) {
       account.bot = mineflayer.createBot({
         username: account.email,
-        //session: a.session, not working atm :(
+        session: account.session,
         auth: "microsoft",
         host: "mc.hypixel.net",
         version: "1.8.9",

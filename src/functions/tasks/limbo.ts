@@ -1,12 +1,12 @@
 import { IAccount } from "../../types";
-import utils from "../../utils/extra.js";
+import { random } from "../../utils/extra.js";
 
 export default async (account: IAccount) => {
   if (account.mainTask === "limbo" && account.location["server"] !== "limbo") {
     account.inTask = true;
-    await account.bot.waitForTicks(utils.random(1, 20));
+    await account.bot.waitForTicks(random(1, 20));
     account.sendMessage("/lobby housing");
-    await account.bot.waitForTicks(utils.random(40, 100));
+    await account.bot.waitForTicks(random(40, 100));
     account.sendMessage("§");
     await account.bot.waitForTicks(120);
     if (account.location["server"] !== "limbo") {

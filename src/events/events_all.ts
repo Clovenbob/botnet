@@ -1,24 +1,25 @@
 import { IAccount } from "../types";
 import config from "../utils/config.js";
-import utils from "../utils/extra.js";
+import { addServer, wait, random } from "../utils/extra.js";
+import chalk from "chalk";
 
 export default (account: IAccount) => {
   account.bot.on("end", async (reason: string) => {
     console.log(
-      utils.chalk.red(`${account.bot.username}: ${reason}.\nReconnecting...`),
+      chalk.red(`${account.bot.username}: ${reason}.\nReconnecting...`),
     );
     account.bot.removeAllListeners();
     account.online = false;
 
     //if offline for 5 mins, remove from the party.
     inPartyTimeout.start();
-    await utils.wait(utils.random(20000, 25000));
+    await wait(random(20000, 25000));
     account.restartBot();
   });
 
   account.bot.on("spawn", async () => {
     if (account.online) return;
-    console.log(utils.chalk.greenBright(`${account.bot.username}: Spawned in`));
+    console.log(chalk.greenBright(`${account.bot.username}: Spawned in`));
     await account.bot.waitForTicks(100);
     account.online = true;
     inPartyTimeout.stop();
@@ -48,7 +49,7 @@ export default (account: IAccount) => {
       console.log(`${account.bot.username}: ${json.toAnsi()}`);
     }
     if (config.main === username) {
-      console.log(utils.chalk.red("Main account can not be a bot's username."));
+      console.log(chalk.red("Main account can not be a bot's username."));
       process.exit();
     }
     if (rankless.startsWith(`from ${config.main}: party`)) {
@@ -77,19 +78,19 @@ export default (account: IAccount) => {
       const serverMatch = message.match(/Sending you to (.+).../);
       if (serverMatch) {
         if (account.subTask !== "match") return;
-        utils.addServer(serverMatch[1]);
+        addServer(serverMatch[1]);
 
         if (config.serverList.includes(serverMatch[1])) {
           clearTimeout(account.houseTimeout);
           account.mainTask = "home";
           account.location["map"] = "Base";
-          account.targetHouse = `${account.bot.username} ${
-            account.houses > 99 ? "" : "0"
-          }${account.houses > 9 ? "" : "0"}${account.houses}`;
+          const houseNumber = `${account.houses > 99 ? "" : "0"}${
+            account.houses > 9 ? "" : "0"
+          }${account.houses}`;
+
+          account.targetHouse = `${account.bot.username} ${houseNumber}`;
           account.sendMessage(
-            `MATCHED! /visit ${account.bot.username} ${
-              account.houses > 99 ? "" : "0"
-            }${account.houses > 9 ? "" : "0"}${account.houses}`,
+            `MATCHED! /visit ${account.bot.username} ${houseNumber}`,
             true,
           );
           account.matched(true);
@@ -105,9 +106,9 @@ export default (account: IAccount) => {
       }
     }
 
-    const l = account.getLocation(message);
-    if (l["valid"] && l !== account.location) {
-      account.location = l;
+    const location = account.getLocation(message);
+    if (location["valid"] && location !== account.location) {
+      account.location = location;
       account.startTask();
     }
   });
@@ -119,9 +120,11 @@ export default (account: IAccount) => {
       slots: string | any[];
     }) => {
       if (!window) return;
+      //prevent crashing when the server doesn't send a packet back.
       window.requiresConfirmation = false;
       if (account.slotToClick === -1) return;
       if (account.clickItems) {
+        //click the xth non air item
         for (let i = 0; i < window.slots.length; i++) {
           if (!window.slots[i]) continue;
           if (account.slotToClick === 0) {
@@ -139,16 +142,16 @@ export default (account: IAccount) => {
 
   account.bot.on("error", async (error: any) => {
     console.log(
-      utils.chalk.red(
+      chalk.red(
         `${error} (${
           account.bot.username ? account.bot.username : account.email
         })\nReconnecting...`,
       ),
     );
-    account.bot?.quit();
-    account.bot?.removeAllListeners();
+    account.bot.quit();
+    account.bot.removeAllListeners();
     account.online = false;
-    await utils.wait(utils.random(5000, 10000));
+    await wait(random(5000, 10000));
     account.restartBot();
   });
 

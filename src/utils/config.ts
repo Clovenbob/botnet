@@ -2,6 +2,7 @@ import { IConfig } from "../types";
 import fs from "fs";
 
 try {
+  //var!!!
   var config = JSON.parse(fs.readFileSync("./config.json").toString());
 } catch (error) {
   console.error(`Error parsing config file: ${error}`);

@@ -1,17 +1,17 @@
 import { IAccount } from "../types";
 import config from "../utils/config.js";
-import utils from "../utils/extra.js";
+import { random } from "../utils/extra.js";
 
 export default (account: IAccount) => {
   account.nextHouse = async () => {
     clearTimeout(account.houseTimeout);
     if (account.subTask !== "match") return;
-    await account.bot.waitForTicks(utils.random(20, 60));
+    await account.bot.waitForTicks(random(20, 60));
     account.houses += 1;
     account.sendMessage(
       `/home ${account.houses > 99 ? "" : "0"}${account.houses > 9 ? "" : "0"}${
         account.houses
-      }`
+      }`,
     );
     account.houseTimeout = setTimeout(() => {
       if (account.subTask !== "match") return;
@@ -26,7 +26,7 @@ export default (account: IAccount) => {
       if (account.serverFails >= 100) {
         account.sendMessage(
           `Server matching failed too many times! Stopping...`,
-          true
+          true,
         );
         account.matched();
       } else if (account.houses === 1) {
@@ -35,7 +35,7 @@ export default (account: IAccount) => {
       } else {
         account.houses = 0;
         account.sendMessage("/lobby housing");
-        setTimeout(() => account.nextHouse(), utils.random(60000, 65000));
+        setTimeout(() => account.nextHouse(), random(60000, 65000));
       }
     }, 10000);
   };

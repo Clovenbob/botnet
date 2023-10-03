@@ -1,5 +1,5 @@
 import { IAccount } from "../types";
-import utils from "../utils/extra.js";
+import { wait, random } from "../utils/extra.js";
 
 export default (account: IAccount) => {
   account.logout = async () => {
@@ -7,7 +7,7 @@ export default (account: IAccount) => {
     account.messageQueue.splice(1);
     if (account.isLeader) account.sendMessage("/p disband");
     account.sendMessage("/status offline");
-    await utils.wait(utils.random(1700, 4900));
+    await wait(random(1700, 4900));
     account.bot.quit();
   };
 
