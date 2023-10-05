@@ -4,7 +4,7 @@ import { addServer, wait, random } from "../utils/extra.js";
 import chalk from "chalk";
 
 export default (account: IAccount) => {
-  account.bot.on("end", async (reason: string) => {
+  account.bot.on("end", async (reason) => {
     console.log(
       chalk.red(`${account.bot.username}: ${reason}.\nReconnecting...`),
     );
@@ -36,10 +36,11 @@ export default (account: IAccount) => {
     account.sendMessage("/locraw");
   });
 
-  account.bot.on("message", (json: any) => {
+  account.bot.on("message", (json) => {
     if (json["extra"] && json["extra"].length === 100) return;
 
-    const message: string = json.toString();
+    const extra: any = json["extra"];
+    const message = json.toString();
     const username = account.bot.username?.toLowerCase();
     const rankless = message.replace(/\[.*?\]\s*/, "").toLowerCase();
 
@@ -58,7 +59,7 @@ export default (account: IAccount) => {
       rankless ===
       `${config.main} invited you to warp to their home. click here to warp`
     ) {
-      account.sendMessage(json["extra"][3]["clickEvent"]["value"]);
+      account.sendMessage(extra[3]["clickEvent"]["value"]);
       account.mainTask = "";
     } else if (
       message.startsWith(
@@ -113,34 +114,28 @@ export default (account: IAccount) => {
     }
   });
 
-  account.bot.on(
-    "windowOpen",
-    async (window: {
-      requiresConfirmation: boolean;
-      slots: string | any[];
-    }) => {
-      if (!window) return;
-      //prevent crashing when the server doesn't send a packet back.
-      window.requiresConfirmation = false;
-      if (account.slotToClick === -1) return;
-      if (account.clickItems) {
-        //click the xth non air item
-        for (let i = 0; i < window.slots.length; i++) {
-          if (!window.slots[i]) continue;
-          if (account.slotToClick === 0) {
-            await account.bot.clickWindow(i, 0, 0);
-            break;
-          }
-          account.slotToClick--;
+  account.bot.on("windowOpen", async (window) => {
+    if (!window) return;
+    //prevent crashing when the server doesn't send a packet back.
+    window.requiresConfirmation = false;
+    if (account.slotToClick === -1) return;
+    if (account.clickItems) {
+      //click the xth non air item
+      for (let i = 0; i < window.slots.length; i++) {
+        if (!window.slots[i]) continue;
+        if (account.slotToClick === 0) {
+          await account.bot.clickWindow(i, 0, 0);
+          break;
         }
-      } else {
-        await account.bot.clickWindow(account.slotToClick, 0, 0);
-        account.slotToClick = -1;
+        account.slotToClick--;
       }
-    },
-  );
+    } else {
+      await account.bot.clickWindow(account.slotToClick, 0, 0);
+      account.slotToClick = -1;
+    }
+  });
 
-  account.bot.on("error", async (error: any) => {
+  account.bot.on("error", async (error) => {
     console.log(
       chalk.red(
         `${error} (${

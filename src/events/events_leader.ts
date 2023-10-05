@@ -21,7 +21,7 @@ export default (account: IAccount) => {
     account.sendMessage(`/p ${config.main}`);
   });
 
-  account.bot.on("message", (json: any) => {
+  account.bot.on("message", (json) => {
     if (json["extra"] && json["extra"].length === 100) return;
     const message: string = json.toString();
 

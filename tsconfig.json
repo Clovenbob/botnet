@@ -21,5 +21,8 @@
     "lib": ["ESNext"],
     "typeRoots": ["node_modules/@types"],
     "moduleResolution": "node"
+  },
+  "ts-node": {
+    "esm": true
   }
 }
